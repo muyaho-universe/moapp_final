@@ -17,6 +17,7 @@ dependencies:
   provider: ^6.0.4
   firebase_ui_auth: ^1.0.3
   google_sign_in: ^5.3.3
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -24,11 +25,9 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter:
-  # TODO: Insert Fonts (103)
   uses-material-design: true
   assets:
     - assets/diamond.png
-    # TODO: Add slanted menu asset (104)
     - packages/shrine_images/0-0.jpg
     - packages/shrine_images/1-0.jpg
     - packages/shrine_images/2-0.jpg
