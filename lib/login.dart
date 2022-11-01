@@ -81,6 +81,30 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 12.0),
+            OutlinedButton(
+              onPressed: (){
+                FirebaseAuth.instance.signInAnonymously();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.question_mark),
+                  Text(
+                    "  Sign in as Guest",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
+            ),
           ],
         ),
       ),

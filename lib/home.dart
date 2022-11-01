@@ -20,10 +20,17 @@ import 'model/product.dart';
 import 'model/products_repository.dart';
 import 'login.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
-  // final user = FirebaseAuth.instance.currentUser;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser;
+
+  bool isLoggedIn = false;
 
   List<Card> _buildGridCards(BuildContext context) {
     List<Product> products = ProductsRepository.loadProducts(Category.all);
@@ -79,56 +86,72 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.person,
-            semanticLabel: 'menu',
-          ),
-          onPressed: () {
-            print('Menu button');
-          },
-        ),
-        title: const Text('Main'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.add,
-              semanticLabel: 'filter',
-            ),
-            onPressed: () {
-              print('Filter button');
-            },
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.logout,
-              semanticLabel: 'filter',
-            ),
-            onPressed: () {
-              _signOut();
-            },
-          ),
-        ],
-      ),
+      appBar: isLoggedIn
+          ? AppBar(
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.person,
+                  semanticLabel: 'menu',
+                ),
+                onPressed: () {
+                  print('Menu button');
+                },
+              ),
+              title: const Text('Main'),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(
+                    Icons.add,
+                    semanticLabel: 'filter',
+                  ),
+                  onPressed: () {
+                    print(isLoggedIn);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.logout,
+                    semanticLabel: 'filter',
+                  ),
+                  onPressed: () {
+                    isLoggedIn = false;
+                    _signOut();
+                  },
+                ),
+              ],
+            )
+          : null,
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const LoginPage();
-            }
-            return GridView.count(
-              crossAxisCount: 2,
-              padding: const EdgeInsets.all(16.0),
-              childAspectRatio: 8.0 / 9.0,
-              children: _buildGridCards(context),
-            );
-          },
-        ),
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const LoginPage();
+              } else {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    isLoggedIn = true;
+                  });
+                });
+
+                return GridView.count(
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: 8.0 / 9.0,
+                  children: _buildGridCards(context),
+                );
+              }
+              return GridView.count(
+                crossAxisCount: 2,
+                padding: const EdgeInsets.all(16.0),
+                childAspectRatio: 8.0 / 9.0,
+                children: _buildGridCards(context),
+              );
+            }),
       ),
     );
   }
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
   }
