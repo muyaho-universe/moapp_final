@@ -100,6 +100,15 @@ class HomePage extends StatelessWidget {
               print('Filter button');
             },
           ),
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              semanticLabel: 'filter',
+            ),
+            onPressed: () {
+              _signOut();
+            },
+          ),
         ],
       ),
       body: SafeArea(
@@ -119,5 +128,8 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }
