@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              child: Image.asset(
+              child: Image.network(
                 product.image,
                 fit: BoxFit.fitWidth,
               ),
@@ -132,10 +132,12 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
+                String image = _getImage(one.get('image')) as String;
                 products.add(new Product(
-                    name: one.get('name'),
-                    price: one.get('price'),
-                    image: one.get('image')));
+                  name: one.get('name'),
+                  price: one.get('price'),
+                  image: image,
+                ));
               }
             }
             return GridView.count(
@@ -151,5 +153,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Get.to(LoginPage());
+  }
+
+  Future<String> _getImage(String imageUrl) async {
+    final ref = FirebaseStorage.instance.ref().child(imageUrl);
+    var url = await ref.getDownloadURL();
+    return url;
   }
 }
