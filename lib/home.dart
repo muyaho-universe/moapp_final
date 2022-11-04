@@ -55,10 +55,10 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              child: Image.network(
-                product.image,
-                fit: BoxFit.fitWidth,
-              ),
+              // child: Image.network(
+              //   product.image,
+              //   fit: BoxFit.fitWidth,
+              // ),
             ),
             Expanded(
               child: Padding(
@@ -132,11 +132,11 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
-                String image = _getImage(one.get('image')) as String;
+                // String image = _getImage(one.get('image')) as String;
                 products.add(new Product(
                   name: one.get('name'),
                   price: one.get('price'),
-                  image: image,
+                  image: one.get('image'),
                 ));
               }
             }

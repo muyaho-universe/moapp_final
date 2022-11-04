@@ -50,9 +50,6 @@ class _LoginPageState extends State<LoginPage> {
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if(snapshot.hasData){
-            Get.to(HomePage());
-          }
           return SafeArea(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -67,7 +64,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 120.0),
                 OutlinedButton(
-                  onPressed: signInWithGoogle,
+                  onPressed: (){
+                    var temp =signInWithGoogle;
+                    bool? t = temp.isBlank;
+                    if(!t.isNull){
+                      Get.to(HomePage());
+                    }
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -91,7 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 12.0),
                 OutlinedButton(
                   onPressed: (){
-                    FirebaseAuth.instance.signInAnonymously();
+                    var temp = FirebaseAuth.instance.signInAnonymously();
+                    bool? t = temp.isBlank;
+                    if(!t.isNull){
+                      Get.to(HomePage());
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
