@@ -15,6 +15,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -34,7 +35,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser;
 
-  bool isLoggedIn = false;
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -43,63 +43,51 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: isLoggedIn
-          ? AppBar(
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.person,
-                  semanticLabel: 'menu',
-                ),
-                onPressed: () {
-                  print('Menu button');
-                },
-              ),
-              title: const Text('Main'),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(
-                    Icons.add,
-                    semanticLabel: 'filter',
-                  ),
-                  onPressed: () {
-                    print(isLoggedIn);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.logout,
-                    semanticLabel: 'filter',
-                  ),
-                  onPressed: () {
-                    isLoggedIn = false;
-                    _signOut();
-                  },
-                ),
-              ],
-            )
-          : null,
-      body: SafeArea(
-        child: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const LoginPage();
-              } else {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  setState(() {
-                    isLoggedIn = true;
-                  });
-                });
-                return CardPage();
-              }
-              return CardPage();
-            }),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.person,
+            semanticLabel: 'menu',
+          ),
+          onPressed: () {
+            print('Menu button');
+          },
+        ),
+        title: const Text('Main'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.add,
+              semanticLabel: 'filter',
+            ),
+            onPressed: () {
+
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              semanticLabel: 'filter',
+            ),
+            onPressed: () {
+              _signOut();
+            },
+          ),
+        ],
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('products').snapshots(),
+        builder: (context, snapshot) {
+          return SafeArea(
+            child: Text('hi'),
+          );
+        }
       ),
     );
   }
 
   Future<void> _signOut() async {
-    isLoggedIn = false;
     await FirebaseAuth.instance.signOut();
+    Get.to(LoginPage());
   }
 }
