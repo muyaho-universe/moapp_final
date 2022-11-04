@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoggedIn = false;
 
   FirebaseStorage storage = FirebaseStorage.instance;
+
   // var products = FirebaseFirestore.instance.collection('products');
 
   @override
@@ -89,7 +90,6 @@ class _HomePageState extends State<HomePage> {
                     isLoggedIn = true;
                   });
                 });
-
                 return CardPage();
               }
               return CardPage();

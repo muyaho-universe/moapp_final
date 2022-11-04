@@ -79,11 +79,12 @@ class _CardPageState extends State<CardPage> {
       stream: FirebaseFirestore.instance.collection('products').snapshots(),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return Center(
-        //     child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
-        //   );
-        // }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          print(snapshot.stackTrace);
+          return Center(
+            child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
+          );
+        }
 
         if(snapshot.hasData){
           for(int i = 0; i < snapshot.data!.docs.length; i++){
