@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +29,8 @@ class _AddPageState extends State<AddPage> {
 
   XFile? upLoadimage;
   final ImagePicker _picker = ImagePicker();
+
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   // late XFile? image;
   bool isLoaded = false;
@@ -64,7 +69,11 @@ class _AddPageState extends State<AddPage> {
         title: Text("Add"),
         actions: <Widget>[
           TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              addMessageToProduct();
+              uploadFile();
+              print("pressed");
+            },
             child: Text(
               "Save",
               style: TextStyle(
@@ -76,7 +85,7 @@ class _AddPageState extends State<AddPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -127,5 +136,28 @@ class _AddPageState extends State<AddPage> {
         ),
       ),
     );
+  }
+
+  Future<DocumentReference> addMessageToProduct() {
+    int price = int.parse(_priceController.toString());
+
+    return FirebaseFirestore.instance
+        .collection('products')
+        .add(<String, dynamic>{
+      'description': _descriptionController.toString(),
+      // 'timestamp': DateTime.now().toString(),
+      'name': _productNameController.toString(),
+      'image': isLoaded ? pickedImageName : defaultImage,
+      'price': price,
+    });
+  }
+
+  Future uploadFile() async {
+    try {
+      final ref = storage.ref().child(pickedFile!.path);
+      await ref.putFile(File(pickedFile!.path));
+    } catch (e) {
+      print('error occured');
+    }
   }
 }
