@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shrine/home.dart';
 import 'package:get/get.dart';
 
+import 'model/product_repo.dart';
+
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
 
@@ -72,10 +74,9 @@ class _AddPageState extends State<AddPage> {
             onPressed: () async {
               addMessageToProduct();
               uploadFile();
+              ProductsRepository.getURL;
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
             },
             child: Text(
               "Save",
@@ -144,7 +145,6 @@ class _AddPageState extends State<AddPage> {
   Future<DocumentReference> addMessageToProduct() {
     int price = int.parse(_priceController.text);
 
-
     return FirebaseFirestore.instance
         .collection('products')
         .add(<String, dynamic>{
@@ -160,6 +160,7 @@ class _AddPageState extends State<AddPage> {
     try {
       final ref = storage.ref().child(url.last);
       await ref.putFile(File(pickedFile!.path));
+
     } catch (e) {
       print('error occured');
     }
