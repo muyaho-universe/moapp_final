@@ -139,14 +139,15 @@ class _AddPageState extends State<AddPage> {
   }
 
   Future<DocumentReference> addMessageToProduct() {
-    int price = int.parse(_priceController.toString());
+    int price = int.parse(_priceController.text);
+
 
     return FirebaseFirestore.instance
         .collection('products')
         .add(<String, dynamic>{
-      'description': _descriptionController.toString(),
+      'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
-      'name': _productNameController.toString(),
+      'name': _productNameController.text,
       'image': isLoaded ? pickedImageName : defaultImage,
       'price': price,
     });
@@ -154,7 +155,7 @@ class _AddPageState extends State<AddPage> {
 
   Future uploadFile() async {
     try {
-      final ref = storage.ref().child(pickedFile!.path);
+      final ref = storage.ref().child(url.last);
       await ref.putFile(File(pickedFile!.path));
     } catch (e) {
       print('error occured');
