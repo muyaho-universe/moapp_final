@@ -12,8 +12,10 @@ class ProductsRepository {
       bool go = true;
       for(var product in ProductRepo2.loadProducts2){
         if(product.name == proudct.name){
-          print("find it!!!!!!!!!!!!!!!!!!");
+          print(proudct.name);
+          print(" find it!!!!!!!!!!!!!!!!!!");
           go = !go;
+          break;
         }
       }
       if(go){
@@ -21,6 +23,7 @@ class ProductsRepository {
         ProductRepo2.loadProducts2.add(Product(name: proudct.name, price: proudct.price, image: image, description: proudct.description));
       }
     }
+    ProductRepo2.loadProducts2 = ProductRepo2.loadProducts2.toSet().toList();
   }
 
   }
