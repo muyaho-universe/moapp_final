@@ -23,6 +23,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/product.dart';
 import 'login.dart';
+import 'model/product_repo.dart';
+import 'model/product_repo2.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -36,10 +38,11 @@ class _HomePageState extends State<HomePage> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
   late QuerySnapshot querySnapshot;
-  List<Product> products = [];
-  String images ="";
+  String url = "gs://moapp-final-759a3.appspot.com/chopsticks.png";
+  String downloadURL = "";
 
   List<Card> _buildGridCards(BuildContext context) {
+    List<Product> products = ProductRepo2.loadProducts2;
     if (products.isEmpty) {
       return const <Card>[];
     }
@@ -48,7 +51,8 @@ class _HomePageState extends State<HomePage> {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product) {
+    return products.map((product)  {
+
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -130,18 +134,21 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
-                String image ="";
-               _getImageURL(one.get('image')).then((String result){
-                 setState(() {
-                   image = result;
-                 });
-               });
-                products.add(new Product(
+                print(one);
+                ProductsRepository.loadProducts.add(Product(
                   name: one.get('name'),
                   price: one.get('price'),
-                  image:image,
+                  image:one.get('image'),
                 ));
+
               }
+              ProductsRepository.getURL();
+              return GridView.count(
+                crossAxisCount: 2,
+                padding: const EdgeInsets.all(16.0),
+                childAspectRatio: 8.0 / 9.0,
+                children: _buildGridCards(context),
+              );
             }
             return GridView.count(
               crossAxisCount: 2,
@@ -158,13 +165,13 @@ class _HomePageState extends State<HomePage> {
     Get.to(LoginPage());
   }
 
-  Future<String> _getImageURL(String imageUrl) async {
-    final ref = FirebaseStorage.instance.ref().child(imageUrl);
-    var url = await ref.getDownloadURL();
-
-
-
-    return url;
+  // Future<String> _getImageURL(String imageUrl) async {
+  //   final ref = FirebaseStorage.instance.ref().child(imageUrl);
+  //   var url = await ref.getDownloadURL();
+  //   return url;
+  // }
+  Future<void> _getImageURL(String imageUrl) async {
+    downloadURL = await FirebaseStorage.instance.ref().child(imageUrl).getDownloadURL();
   }
 
 }
