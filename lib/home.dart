@@ -21,6 +21,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'detail.dart';
 import 'model/product.dart';
 import 'login.dart';
 import 'model/product_repo.dart';
@@ -41,14 +42,12 @@ class _HomePageState extends State<HomePage> {
   List<Product> products = [];
   static bool isFirst = true;
 
-
   List<Card> _buildGridCards(BuildContext context) {
     print(isFirst);
-    if(isFirst){
+    if (isFirst) {
       ProductsRepository.getURL();
       isFirst = !isFirst;
     }
-
 
     products = ProductRepo2.loadProducts2;
     if (products.isEmpty) {
@@ -59,8 +58,7 @@ class _HomePageState extends State<HomePage> {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product)  {
-
+    return products.map((product) {
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -85,6 +83,22 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       formatter.format(product.price),
                       style: theme.textTheme.subtitle2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all<Size>(
+                              Size(16, 9),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(DetailPage());
+                          },
+                          child: Text("more"),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -146,15 +160,14 @@ class _HomePageState extends State<HomePage> {
                 ProductsRepository.loadProducts.add(Product(
                   name: one.get('name'),
                   price: one.get('price'),
-                  image:one.get('image'),
+                  image: one.get('image'),
                 ));
               }
-
             }
             return GridView.count(
               crossAxisCount: 2,
               padding: const EdgeInsets.all(16.0),
-              childAspectRatio: 8.0 / 9.0,
+              childAspectRatio: .75,
               children: _buildGridCards(context),
             );
           }),
@@ -167,11 +180,9 @@ class _HomePageState extends State<HomePage> {
     Get.to(LoginPage());
   }
 
-  // Future<String> _getImageURL(String imageUrl) async {
-  //   final ref = FirebaseStorage.instance.ref().child(imageUrl);
-  //   var url = await ref.getDownloadURL();
-  //   return url;
-  // }
-
-
+// Future<String> _getImageURL(String imageUrl) async {
+//   final ref = FirebaseStorage.instance.ref().child(imageUrl);
+//   var url = await ref.getDownloadURL();
+//   return url;
+// }
 }
