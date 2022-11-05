@@ -28,7 +28,7 @@ class FinalApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        '/': (BuildContext context) => HomePage(),
+        // '/': (BuildContext context) => HomePage(),
       },
 
     );

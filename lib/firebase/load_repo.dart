@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product.dart';
 import '../model/product_repo.dart';
+import '../model/product_repo2.dart';
 
 class FirebaseLoading {
-  static void loading() async {
+  static Future<void> loading() async {
+
+    print("loading working");
    FirebaseFirestore.instance
         .collection('products')
         .snapshots()
-        .listen((snapshots) {
+        .listen((snapshots) async {
       for (var doc in snapshots.docs) {
         bool go = true;
         for (var p in ProductsRepository.loadProducts) {
@@ -18,40 +22,24 @@ class FirebaseLoading {
           }
         }
         if (go) {
+          String image = await FirebaseStorage.instance.ref().child(doc.get('image')).getDownloadURL();
           ProductsRepository.loadProducts.add(Product(
             name: doc.get('name'),
             price: doc.get('price'),
-            image: doc.get('image'),
+            image: image,
             description: doc.get('description'),
           ));
         }
       }
       // notifyListeners();
     });
-
-    // StreamBuilder(
-    //   stream: FirebaseFirestore.instance.collection('products').snapshots(),
-    //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    //     if (snapshot.hasData) {
-    //       for (int i = 0; i < snapshot.data!.docs.length; i++) {
-    //         var one = snapshot.data!.docs[i];
-    //         var go = true;
-    //         for (var p in ProductsRepository.loadProducts) {
-    //           if (p.name == one.get('name')) {
-    //             go = false;
-    //           }
-    //         }
-    //         if (go) {
-    //           ProductsRepository.loadProducts.add(Product(
-    //             name: one.get('name'),
-    //             price: one.get('price'),
-    //             image: one.get('image'),
-    //             description: one.get('description'),
-    //           ));
-    //         }
-    //       }
-    //     }
-    //   },
-    // );
+   ProductsRepository.loadProducts = ProductsRepository.loadProducts.toSet().toList();
+  }
+  static prints(){
+    print(ProductsRepository.loadProducts.length);
+    for(var p in ProductsRepository.loadProducts){
+      String ment ="name: " + p.name ;
+      print(ment);
+    }
   }
 }

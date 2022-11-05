@@ -9,11 +9,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'add.dart';
 import 'detail.dart';
+import 'firebase/load_repo.dart';
 import 'model/product.dart';
 import 'login.dart';
 import 'model/product_repo.dart';
 import 'model/product_repo2.dart';
-
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   String dropdownValue = query.first;
 
   List<Card> _buildGridCards(BuildContext context) {
-
-    products = ProductRepo2.loadProducts2;
+    ProductsRepository.loadProducts = ProductsRepository.loadProducts.toSet().toList();
+    products = ProductsRepository.loadProducts;
     // products = ProductRepo2.loadProductsSet.toList();
     if (products.isEmpty) {
       return const <Card>[];
@@ -109,7 +109,8 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
-            print(FirebaseAuth.instance.currentUser?.uid);
+            print(FirebaseLoading.prints());
+            // print(FirebaseAuth.instance.currentUser?.uid);
             print('Menu button');
           },
         ),
@@ -135,77 +136,81 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       // body: StreamBuilder(
-      //     stream: FirebaseFirestore.instance.collection('products').snapshots(),
-      //     builder: (context,
-      //         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-      //       if (snapshot.connectionState == ConnectionState.waiting) {
-      //         return Center(
-      //           child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
-      //         );
-      //       }
-      //       if (snapshot.hasData) {
-      //         for (int i = 0; i < snapshot.data!.docs.length; i++) {
-      //           var one = snapshot.data!.docs[i];
-      //           var go = true;
-      //           for (var p in ProductsRepository.loadProducts) {
-      //             if (p.name == one.get('name')) {
-      //               go = false;
-      //             }
-      //           }
-      //           if (go) {
-      //             ProductsRepository.loadProducts.add(Product(
-      //               name: one.get('name'),
-      //               price: one.get('price'),
-      //               image: one.get('image'),
-      //               description: one.get('description'),
-      //             ));
+      //   stream: FirebaseFirestore.instance.collection('products').snapshots(),
+      //   builder: (context,
+      //       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(
+      //         child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
+      //       );
+      //     }
+      //     if (snapshot.hasData) {
+      //       for (int i = 0; i < snapshot.data!.docs.length; i++) {
+      //         var one = snapshot.data!.docs[i];
+      //         var go = true;
+      //         for (var p in ProductsRepository.loadProducts) {
+      //           if (p.name == one.get('name')) {
+      //             go = false;
       //           }
       //         }
+      //         if (go) {
+      //
+      //           ProductsRepository.loadProducts.add(Product(
+      //             name: one.get('name'),
+      //             price: one.get('price'),
+      //             image: one.get('image'),
+      //             description: one.get('description'),
+      //           ));
+      //         }
       //       }
+      //     }
 
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: DropdownButton<String>(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
+          body: Column(
+            children: <Widget>[
+              Container(
+                child: DropdownButton<String>(
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_downward),
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  items: query.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                height: 50,
               ),
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              items: query.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            height: 50,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            child: SafeArea(
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.all(16.0),
-                childAspectRatio: .75,
-                children: _buildGridCards(context),
+              SizedBox(
+                height: 15,
               ),
-            ),
+              Expanded(
+                child: SafeArea(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    padding: const EdgeInsets.all(16.0),
+                    childAspectRatio: .75,
+                    children: _buildGridCards(context),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
+        // },
+    //   ),
+    // );
   }
 
   Future<void> _signOut() async {

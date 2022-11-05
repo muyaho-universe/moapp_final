@@ -61,9 +61,10 @@ class _LoginPageState extends State<LoginPage> {
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          FirebaseLoading.loading();
-          ProductsRepository.getURL();
+
+
           if(snapshot.hasData && LoginPage.go){
+            FirebaseLoading.loading();
             return HomePage();
           }
 
