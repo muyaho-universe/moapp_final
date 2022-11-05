@@ -12,6 +12,7 @@ class ProductsRepository {
       bool go = true;
       for(var product in ProductRepo2.loadProducts2){
         if(product.name == proudct.name){
+          print("find it!!!!!!!!!!!!!!!!!!");
           go = !go;
         }
       }

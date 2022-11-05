@@ -1,16 +1,4 @@
-// Copyright 2018-present the Flutter authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -41,6 +29,8 @@ class _HomePageState extends State<HomePage> {
   late QuerySnapshot querySnapshot;
   List<Product> products = [];
   static bool isFirst = true;
+
+    List<String> query = <String>['ASC', 'DESC'];
 
   List<Card> _buildGridCards(BuildContext context) {
     if (isFirst) {
@@ -168,13 +158,25 @@ class _HomePageState extends State<HomePage> {
               }
             }
 
-            return SafeArea(
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.all(16.0),
-                childAspectRatio: .75,
-                children: _buildGridCards(context),
-              ),
+            return Column(
+              children: <Widget>[
+                Container(
+                    color: Colors.grey,
+                  height: 100,
+
+                ),
+                SizedBox(height: 15,),
+                Expanded(
+                  child: SafeArea(
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      padding: const EdgeInsets.all(16.0),
+                      childAspectRatio: .75,
+                      children: _buildGridCards(context),
+                    ),
+                  ),
+                ),
+              ],
             );
           }),
     );
@@ -185,6 +187,8 @@ class _HomePageState extends State<HomePage> {
     LoginPage.go = false;
     Get.to(LoginPage());
   }
+
+
 
 // Future<String> _getImageURL(String imageUrl) async {
 //   final ref = FirebaseStorage.instance.ref().child(imageUrl);
