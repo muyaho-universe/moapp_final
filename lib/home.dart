@@ -38,11 +38,10 @@ class _HomePageState extends State<HomePage> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
   late QuerySnapshot querySnapshot;
-  String url = "gs://moapp-final-759a3.appspot.com/chopsticks.png";
-  String downloadURL = "";
+  List<Product> products = [];
 
   List<Card> _buildGridCards(BuildContext context) {
-    List<Product> products = ProductRepo2.loadProducts2;
+
     if (products.isEmpty) {
       return const <Card>[];
     }
@@ -143,12 +142,7 @@ class _HomePageState extends State<HomePage> {
 
               }
               ProductsRepository.getURL();
-              return GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.all(16.0),
-                childAspectRatio: 8.0 / 9.0,
-                children: _buildGridCards(context),
-              );
+              products = ProductRepo2.loadProducts2;
             }
             return GridView.count(
               crossAxisCount: 2,
@@ -171,8 +165,6 @@ class _HomePageState extends State<HomePage> {
   //   var url = await ref.getDownloadURL();
   //   return url;
   // }
-  Future<void> _getImageURL(String imageUrl) async {
-    downloadURL = await FirebaseStorage.instance.ref().child(imageUrl).getDownloadURL();
-  }
+
 
 }
