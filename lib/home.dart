@@ -94,7 +94,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           onPressed: () {
-                            Get.to(DetailPage());
+                            Get.to(DetailPage(
+                              product: product,
+                            ));
                           },
                           child: Text("more"),
                         ),
@@ -161,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                   name: one.get('name'),
                   price: one.get('price'),
                   image: one.get('image'),
+                  description: one.get('description'),
                 ));
               }
             }

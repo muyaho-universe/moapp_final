@@ -9,7 +9,7 @@ class ProductsRepository {
   static Future<void> getURL() async {
     for(var proudct in loadProducts){
       String image = await FirebaseStorage.instance.ref().child(proudct.image).getDownloadURL();
-      ProductRepo2.loadProducts2.add(Product(name: proudct.name, price: proudct.price, image: image));
+      ProductRepo2.loadProducts2.add(Product(name: proudct.name, price: proudct.price, image: image, description: proudct.description));
     }
   }
 
