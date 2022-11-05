@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shrine/home.dart';
+import 'model/product_repo.dart';
+import 'model/product_repo2.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,6 +28,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  // ProductsRepository.loadProducts.clear();
+  // ProductRepo2.loadProducts2.clear();
+  //
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -65,6 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 120.0),
                 OutlinedButton(
                   onPressed: (){
+                    ProductsRepository.loadProducts.clear();
+                    // ProductRepo2.loadProducts2.clear();
                     var temp =signInWithGoogle;
                     bool? t = temp.isBlank;
                     if(!t.isNull){
@@ -94,6 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 12.0),
                 OutlinedButton(
                   onPressed: (){
+                    // ProductsRepository.loadProducts.clear();
+                    ProductRepo2.loadProducts2.clear();
                     var temp = FirebaseAuth.instance.signInAnonymously();
                     bool? t = temp.isBlank;
                     if(!t.isNull){
