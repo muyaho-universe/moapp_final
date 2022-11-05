@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/material.dart';
+
 enum Category {
   all,
   accessories,
@@ -31,4 +33,5 @@ class Product {
   final String name;
   final int price;
   final String image;
+
 }

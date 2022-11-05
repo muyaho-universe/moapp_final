@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   late QuerySnapshot querySnapshot;
   List<Product> products = [];
+  String images ="";
 
   List<Card> _buildGridCards(BuildContext context) {
     if (products.isEmpty) {
@@ -55,10 +56,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              // child: Image.network(
-              //   product.image,
-              //   fit: BoxFit.fitWidth,
-              // ),
+              child: Image.network(product.image),
             ),
             Expanded(
               child: Padding(
@@ -124,7 +122,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              print(snapshot.stackTrace);
+              // print(snapshot.stackTrace);
               return Center(
                 child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
               );
@@ -132,11 +130,16 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
-                // String image = _getImage(one.get('image')) as String;
+                String image ="";
+               _getImageURL(one.get('image')).then((String result){
+                 setState(() {
+                   image = result;
+                 });
+               });
                 products.add(new Product(
                   name: one.get('name'),
                   price: one.get('price'),
-                  image: one.get('image'),
+                  image:image,
                 ));
               }
             }
@@ -155,9 +158,13 @@ class _HomePageState extends State<HomePage> {
     Get.to(LoginPage());
   }
 
-  Future<String> _getImage(String imageUrl) async {
+  Future<String> _getImageURL(String imageUrl) async {
     final ref = FirebaseStorage.instance.ref().child(imageUrl);
     var url = await ref.getDownloadURL();
+
+
+
     return url;
   }
+
 }
