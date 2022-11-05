@@ -72,7 +72,10 @@ class _AddPageState extends State<AddPage> {
             onPressed: () async {
               addMessageToProduct();
               uploadFile();
-              Get.off(HomePage());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => HomePage()));
             },
             child: Text(
               "Save",
