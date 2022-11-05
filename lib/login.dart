@@ -22,7 +22,7 @@ import 'model/product_repo2.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-
+  static var go = false;
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -30,6 +30,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   Future<UserCredential> signInWithGoogle() async {
+    _signOut();
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -42,12 +43,14 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
+    LoginPage.go = true;
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<UserCredential> signInAsAnonymous() async {
+    _signOut();
+    LoginPage.go = true;
     return await FirebaseAuth.instance.signInAnonymously();
   }
 
@@ -58,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
 
-          if(snapshot.hasData){
+          if(snapshot.hasData && LoginPage.go){
             return HomePage();
           }
 
@@ -100,16 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 12.0),
                 OutlinedButton(
                   onPressed: signInAsAnonymous,
-                  //     (){
-                  //   // ProductsRepository.loadProducts.clear();
-                  //   // ProductRepo2.loadProducts2.clear();
-                  //   var temp =;
-                  //   print(FirebaseAuth.instance.currentUser?.displayName);
-                  //   bool? t = temp.isBlank;
-                  //   if(!t.isNull){
-                  //     Get.to(HomePage());
-                  //   }
-                  // },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -136,5 +129,9 @@ class _LoginPageState extends State<LoginPage> {
         }
       ),
     );
+  }
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Get.to(LoginPage());
   }
 }
