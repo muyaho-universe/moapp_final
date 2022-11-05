@@ -75,7 +75,7 @@ class _AddPageState extends State<AddPage> {
             onPressed: () async {
               addMessageToProduct();
               uploadFile();
-              FirebaseLoading.loading();
+              // FirebaseLoading.loading();
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },

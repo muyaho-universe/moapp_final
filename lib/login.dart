@@ -24,12 +24,12 @@ import 'firebase/load_repo.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
   static var go = false;
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   Future<UserCredential> signInWithGoogle() async {
     _signOut();
     // Trigger the authentication flow
@@ -59,80 +59,77 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
 
-
-          if(snapshot.hasData && LoginPage.go){
-            FirebaseLoading.loading();
-            return HomePage();
-          }
-
-          return SafeArea(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              children: <Widget>[
-                const SizedBox(height: 80.0),
-                Column(
-                  children: <Widget>[
-                    Image.asset('assets/diamond.png'),
-                    const SizedBox(height: 16.0),
-                    const Text('SHRINE'),
-                  ],
-                ),
-                const SizedBox(height: 120.0),
-                OutlinedButton(
-                  onPressed: signInWithGoogle,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.login),
-                      Text(
-                        "  Sign in with Google",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+            if (snapshot.hasData && LoginPage.go) {
+              return HomePage();
+            }
+            return SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                children: <Widget>[
+                  const SizedBox(height: 80.0),
+                  Column(
+                    children: <Widget>[
+                      Image.asset('assets/diamond.png'),
+                      const SizedBox(height: 16.0),
+                      const Text('SHRINE'),
                     ],
                   ),
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                OutlinedButton(
-                  onPressed: signInAsAnonymous,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.question_mark),
-                      Text(
-                        "  Sign in as Guest",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                  const SizedBox(height: 120.0),
+                  OutlinedButton(
+                    onPressed: signInWithGoogle,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.login),
+                        Text(
+                          "  Sign in with Google",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                    ],
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }
-      ),
+                  const SizedBox(height: 12.0),
+                  OutlinedButton(
+                    onPressed: signInAsAnonymous,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.question_mark),
+                        Text(
+                          "  Sign in as Guest",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
     );
   }
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Get.to(LoginPage());

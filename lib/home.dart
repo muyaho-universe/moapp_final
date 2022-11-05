@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseLoading.loading();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
