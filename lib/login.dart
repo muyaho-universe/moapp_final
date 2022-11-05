@@ -19,6 +19,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shrine/home.dart';
 import 'model/product_repo.dart';
 import 'model/product_repo2.dart';
+import 'firebase/load_repo.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -60,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-
+          FirebaseLoading.loading();
+          ProductsRepository.getURL();
           if(snapshot.hasData && LoginPage.go){
             return HomePage();
           }
