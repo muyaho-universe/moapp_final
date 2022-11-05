@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 120.0),
                 OutlinedButton(
                   onPressed: (){
-                    ProductsRepository.loadProducts.clear();
+                    // ProductsRepository.loadProducts.clear();
                     // ProductRepo2.loadProducts2.clear();
                     var temp =signInWithGoogle;
                     bool? t = temp.isBlank;
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 OutlinedButton(
                   onPressed: (){
                     // ProductsRepository.loadProducts.clear();
-                    ProductRepo2.loadProducts2.clear();
+                    // ProductRepo2.loadProducts2.clear();
                     var temp = FirebaseAuth.instance.signInAnonymously();
                     bool? t = temp.isBlank;
                     if(!t.isNull){

@@ -39,9 +39,18 @@ class _HomePageState extends State<HomePage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   late QuerySnapshot querySnapshot;
   List<Product> products = [];
+  static bool isFirst = true;
+
 
   List<Card> _buildGridCards(BuildContext context) {
+    print(isFirst);
+    if(isFirst){
+      ProductsRepository.getURL();
+      isFirst = !isFirst;
+    }
 
+
+    products = ProductRepo2.loadProducts2;
     if (products.isEmpty) {
       return const <Card>[];
     }
@@ -139,10 +148,8 @@ class _HomePageState extends State<HomePage> {
                   price: one.get('price'),
                   image:one.get('image'),
                 ));
-
               }
-              ProductsRepository.getURL();
-              products = ProductRepo2.loadProducts2;
+
             }
             return GridView.count(
               crossAxisCount: 2,
