@@ -24,7 +24,7 @@ class FinalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shrine',
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
         '/': (BuildContext context) => HomePage(),
