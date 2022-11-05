@@ -7,12 +7,18 @@ class ProductsRepository {
   static List<Product> loadProducts = [];
 
   static Future<void> getURL() async {
-    for(var proudct in loadProducts){
-      if(!ProductRepo2.loadProducts2.contains(proudct.name)){
+    var loadProduct = loadProducts.toSet();
+    for(var proudct in loadProduct){
+      bool go = true;
+      for(var product in ProductRepo2.loadProducts2){
+        if(product.name == proudct.name){
+          go = !go;
+        }
+      }
+      if(go){
         String image = await FirebaseStorage.instance.ref().child(proudct.image).getDownloadURL();
         ProductRepo2.loadProducts2.add(Product(name: proudct.name, price: proudct.price, image: image, description: proudct.description));
       }
-
     }
   }
 

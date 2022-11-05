@@ -29,9 +29,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  // ProductsRepository.loadProducts.clear();
-  // ProductRepo2.loadProducts2.clear();
-  //
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -50,12 +47,21 @@ class _LoginPageState extends State<LoginPage> {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  Future<UserCredential> signInAsAnonymous() async {
+    return await FirebaseAuth.instance.signInAnonymously();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+
+          if(snapshot.hasData){
+            return HomePage();
+          }
+
           return SafeArea(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -70,15 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 120.0),
                 OutlinedButton(
-                  onPressed: (){
-                    // ProductsRepository.loadProducts.clear();
-                    // ProductRepo2.loadProducts2.clear();
-                    var temp =signInWithGoogle;
-                    bool? t = temp.isBlank;
-                    if(!t.isNull){
-                      Get.to(HomePage());
-                    }
-                  },
+                  onPressed: signInWithGoogle,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -101,15 +99,17 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 12.0),
                 OutlinedButton(
-                  onPressed: (){
-                    // ProductsRepository.loadProducts.clear();
-                    // ProductRepo2.loadProducts2.clear();
-                    var temp = FirebaseAuth.instance.signInAnonymously();
-                    bool? t = temp.isBlank;
-                    if(!t.isNull){
-                      Get.to(HomePage());
-                    }
-                  },
+                  onPressed: signInAsAnonymous,
+                  //     (){
+                  //   // ProductsRepository.loadProducts.clear();
+                  //   // ProductRepo2.loadProducts2.clear();
+                  //   var temp =;
+                  //   print(FirebaseAuth.instance.currentUser?.displayName);
+                  //   bool? t = temp.isBlank;
+                  //   if(!t.isNull){
+                  //     Get.to(HomePage());
+                  //   }
+                  // },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -43,13 +43,12 @@ class _HomePageState extends State<HomePage> {
   static bool isFirst = true;
 
   List<Card> _buildGridCards(BuildContext context) {
-    print(isFirst);
     if (isFirst) {
       ProductsRepository.getURL();
-      isFirst = !isFirst;
+      // isFirst = !isFirst;
     }
-
     products = ProductRepo2.loadProducts2;
+    // products = ProductRepo2.loadProductsSet.toList();
     if (products.isEmpty) {
       return const <Card>[];
     }
@@ -122,6 +121,7 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
+            print(FirebaseAuth.instance.currentUser?.uid);
             print('Menu button');
           },
         ),
@@ -150,7 +150,6 @@ class _HomePageState extends State<HomePage> {
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              // print(snapshot.stackTrace);
               return Center(
                 child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
               );
@@ -158,7 +157,8 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
-                print(one);
+                if(ProductsRepository.loadProducts.contains(one.get('name')))
+                  print("111!!!  !!!");
                 ProductsRepository.loadProducts.add(Product(
                   name: one.get('name'),
                   price: one.get('price'),
@@ -168,11 +168,13 @@ class _HomePageState extends State<HomePage> {
               }
             }
 
-            return GridView.count(
-              crossAxisCount: 2,
-              padding: const EdgeInsets.all(16.0),
-              childAspectRatio: .75,
-              children: _buildGridCards(context),
+            return SafeArea(
+              child: GridView.count(
+                crossAxisCount: 2,
+                padding: const EdgeInsets.all(16.0),
+                childAspectRatio: .75,
+                children: _buildGridCards(context),
+              ),
             );
           }),
     );
