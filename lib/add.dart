@@ -39,18 +39,6 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
-  //
-  // Future pickImage() async {
-  //   try {
-  //     image = await _picker.pickImage(source: ImageSource.gallery);
-  //     if(image == null) return;
-  //     final imageTemp = XFile(image!.path);
-  //     setState(() => this.upLoadimage = imageTemp);
-  //   } on PlatformException catch(e) {
-  //     print('Failed to pick image: $e');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
