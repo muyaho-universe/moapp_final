@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 
 import 'home.dart';
 import 'login.dart';
+// import 'temp.dart';
 
 class FinalApp extends StatelessWidget {
   const FinalApp({Key? key}) : super(key: key);
@@ -28,7 +29,6 @@ class FinalApp extends StatelessWidget {
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
         '/': (BuildContext context) => HomePage(),
-
       },
 
     );

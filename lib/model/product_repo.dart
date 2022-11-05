@@ -15,15 +15,15 @@ class ProductsRepository {
           print(proudct.name);
           print(" find it!!!!!!!!!!!!!!!!!!");
           go = !go;
-          break;
         }
       }
+      print(go);
       if(go){
         String image = await FirebaseStorage.instance.ref().child(proudct.image).getDownloadURL();
         ProductRepo2.loadProducts2.add(Product(name: proudct.name, price: proudct.price, image: image, description: proudct.description));
       }
     }
-    ProductRepo2.loadProducts2 = ProductRepo2.loadProducts2.toSet().toList();
+    // ProductRepo2.loadProducts2 = ProductRepo2.loadProducts2.toSet().toList();
   }
 
   }

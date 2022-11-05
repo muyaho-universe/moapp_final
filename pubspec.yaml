@@ -20,6 +20,7 @@ dependencies:
   get: ^4.6.5
   firebase_storage: ^11.0.3
   image_picker: ^0.8.6
+  video_player: ^2.4.7
 
 
 dev_dependencies:
