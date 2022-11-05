@@ -72,7 +72,7 @@ class _AddPageState extends State<AddPage> {
             onPressed: () async {
               addMessageToProduct();
               uploadFile();
-              print("pressed");
+              Get.off(HomePage());
             },
             child: Text(
               "Save",

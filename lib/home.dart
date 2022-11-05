@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -150,14 +148,20 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               for (int i = 0; i < snapshot.data!.docs.length; i++) {
                 var one = snapshot.data!.docs[i];
-                if(ProductsRepository.loadProducts.contains(one.get('name')))
-                  print("111!!!  !!!");
-                ProductsRepository.loadProducts.add(Product(
-                  name: one.get('name'),
-                  price: one.get('price'),
-                  image: one.get('image'),
-                  description: one.get('description'),
-                ));
+                var go = true;
+                for (var p in ProductsRepository.loadProducts) {
+                  if (p.name == one.get('name')) {
+                    go = false;
+                  }
+                }
+                if (go) {
+                  ProductsRepository.loadProducts.add(Product(
+                    name: one.get('name'),
+                    price: one.get('price'),
+                    image: one.get('image'),
+                    description: one.get('description'),
+                  ));
+                }
               }
             }
 
@@ -186,11 +190,11 @@ class _HomePageState extends State<HomePage> {
                       );
                     }).toList(),
                   ),
-
                   height: 50,
-
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Expanded(
                   child: SafeArea(
                     child: GridView.count(
@@ -212,8 +216,6 @@ class _HomePageState extends State<HomePage> {
     LoginPage.go = false;
     Get.to(LoginPage());
   }
-
-
 
 // Future<String> _getImageURL(String imageUrl) async {
 //   final ref = FirebaseStorage.instance.ref().child(imageUrl);
