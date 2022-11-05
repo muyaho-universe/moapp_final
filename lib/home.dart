@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'add.dart';
 import 'detail.dart';
 import 'model/product.dart';
 import 'login.dart';
@@ -121,9 +122,10 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(
               Icons.add,
-              semanticLabel: 'filter',
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(AddPage());
+            },
           ),
           IconButton(
             icon: const Icon(
