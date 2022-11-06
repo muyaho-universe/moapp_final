@@ -28,6 +28,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static bool orderDesc = false;
+  static bool orderDesc2 = false;
   final user = FirebaseAuth.instance.currentUser;
 
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -40,8 +42,76 @@ class _HomePageState extends State<HomePage> {
 
   List<Card> _buildGridCards(BuildContext context) {
     products = [];
-    products = ProductsRepository.loadProducts;
 
+    products = ProductsRepository.loadProducts;
+    // products = ProductRepo2.loadProductsSet.toList();
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString());
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 18 / 11,
+              child: Image.network(product.image),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      product.name,
+                      style: theme.textTheme.headline6,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      formatter.format(product.price),
+                      style: theme.textTheme.subtitle2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all<Size>(
+                              Size(16, 9),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(DetailPage(
+                              product: product,
+                              num: product.liked,
+                            ));
+                          },
+                          child: Text("more"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  List<Card> _buildReverseGridCards(BuildContext context) {
+    products = [];
+
+    products = List.from(ProductsRepository.loadProducts.reversed);
     // products = ProductRepo2.loadProductsSet.toList();
     if (products.isEmpty) {
       return const <Card>[];
@@ -186,7 +256,14 @@ class _HomePageState extends State<HomePage> {
                   // This is called when the user selects an item.
                   setState(() {
                     dropdownValue = value!;
+                    if (value! == 'ASC') {
+                      orderDesc = false;
+                    } else {
+                      orderDesc = true;
+                    }
                   });
+                  print("changed");
+                  print(orderDesc);
                 },
                 items: query.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -206,7 +283,9 @@ class _HomePageState extends State<HomePage> {
                   crossAxisCount: 2,
                   padding: const EdgeInsets.all(16.0),
                   childAspectRatio: .75,
-                  children: _buildGridCards(context),
+                  children: orderDesc
+                      ? _buildReverseGridCards(context)
+                      : _buildGridCards(context),
                 ),
               ),
             ),
@@ -256,6 +335,7 @@ class FirebaseLoading extends ChangeNotifier {
     print("loading working");
     FirebaseFirestore.instance
         .collection('products')
+        .orderBy('price', descending: _HomePageState.orderDesc2)
         .snapshots()
         .listen((snapshots) async {
       FirebaseFirestore.instance
@@ -263,9 +343,7 @@ class FirebaseLoading extends ChangeNotifier {
           .snapshots()
           .listen((snapshot) async {
         if (snapshot.size == 0) {
-
           for (var doc in snapshots.docs) {
-
             FirebaseFirestore.instance
                 .collection(FirebaseAuth.instance.currentUser!.uid)
                 .doc(doc.id)
