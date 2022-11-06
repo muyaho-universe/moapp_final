@@ -151,7 +151,6 @@ class _EditPageState extends State<EditPage> {
   Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
     String image ="";
-    // String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
     if(isLoaded){
       image = await FirebaseStorage.instance.ref().child(pickedImageName).getDownloadURL();
     }
