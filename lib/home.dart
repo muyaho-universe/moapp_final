@@ -199,15 +199,7 @@ class _HomePageState extends State<HomePage> {
               Get.to(AddPage());
             },
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.logout,
-              semanticLabel: 'filter',
-            ),
-            onPressed: () {
-              _signOut();
-            },
-          ),
+
         ],
       ),
       // body: StreamBuilder(
@@ -295,12 +287,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    LoginPage.go = false;
-    ProductsRepository.loadProducts = [];
-    Get.to(LoginPage());
-  }
+
 }
 
 // Future<String> _getImageURL(String imageUrl) async {

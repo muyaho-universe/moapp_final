@@ -24,6 +24,7 @@ import 'firebase/load_repo.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
   static var go = false;
+  static bool isGoogle = true;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -44,14 +45,15 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+    LoginPage.isGoogle = true;
     LoginPage.go = true;
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<UserCredential> signInAsAnonymous() async {
-
     _signOut();
+    LoginPage.isGoogle = false;
     LoginPage.go = true;
     return await FirebaseAuth.instance.signInAnonymously();
   }
