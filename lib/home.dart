@@ -272,6 +272,10 @@ class FirebaseLoading extends ChangeNotifier {
             price: doc.get('price'),
             image: image,
             description: doc.get('description'),
+            liked: doc.get('liked'),
+            creator: doc.get('creator'),
+            uploadTime: doc.get('uploadTime'),
+            editedTime: doc.get('editedTime'),
           ));
         }
       }
