@@ -13,14 +13,16 @@ import 'model/product_repo.dart';
 import 'src/widgets.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key, required this.product}) : super(key: key);
+  DetailPage({Key? key, required this.product, required this.num}) : super(key: key);
   final Product product;
+  final int num;
 
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
+  bool isFirst = true;
 
 
   @override
@@ -29,11 +31,12 @@ class _DetailPageState extends State<DetailPage> {
 
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
-    int liked = widget.product.liked;
-    print(isLiked);
 
+    int liked = (isFirst)? widget.num : widget.num + 1;
     var snackBar = SnackBar(
-      content: isLiked ? Text('I LIKE IT') : Text("You can only do it once !!"),
+      content: (isLiked && isFirst)
+          ? Text('I LIKE IT')
+          : Text("You can only do it once !!"),
     );
     return Scaffold(
       appBar: AppBar(
@@ -104,20 +107,37 @@ class _DetailPageState extends State<DetailPage> {
                     SizedBox(
                       width: 150,
                     ),
-                    isLiked
+                    (isLiked && isFirst)
                         ? IconButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
+                              liked++;
+                              print(liked);
                               setState(() {
-                                liked++;
+                                print("it runs");
+
+                                isFirst = !isFirst;
                                 isLiked = !isLiked;
+                              });
+                              FirebaseFirestore.instance
+                                  .collection(
+                                      FirebaseAuth.instance.currentUser!.uid)
+                                  .doc(widget.product.id)
+                                  .set(<String, dynamic>{'liked': false},
+                                      SetOptions(merge: true));
+                              FirebaseFirestore.instance
+                                  .collection('products')
+                                  .doc(widget.product.id)
+                                  .update(<String, dynamic>{
+                                'liked': liked,
                               });
                             },
                             icon: Icon(Icons.thumb_up, color: Colors.red),
                           )
                         : IconButton(
                             onPressed: () {
+                              print(liked);
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             },
@@ -219,8 +239,6 @@ class _DetailPageState extends State<DetailPage> {
       ),
     );
   }
-
-
 
   void format() {}
 }

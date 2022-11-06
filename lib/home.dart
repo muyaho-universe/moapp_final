@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Get.to(DetailPage(
                               product: product,
+                              num: product.liked,
                             ));
                           },
                           child: Text("more"),
