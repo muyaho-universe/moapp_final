@@ -231,6 +231,26 @@ class _HomePageState extends State<HomePage> {
 //   return url;
 // }
 class FirebaseLoading extends ChangeNotifier {
+  FirebaseLoading(){
+    init();
+  }
+  Future<void> init() async {
+    await Firebase.initializeApp();
+
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if (user != null) {
+        loading();
+      }
+      // } else {
+      //   _guestBookMessages = [];
+      //   _guestBookSubscription?.cancel();
+      //   _attendingSubscription?.cancel();
+      // }
+      notifyListeners();
+    });
+  }
+  // FirebaseAuth.instance.userChanges().listen();
+
   Future<void> loading() async {
     print("loading working");
     FirebaseFirestore.instance
