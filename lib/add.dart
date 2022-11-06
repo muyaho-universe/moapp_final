@@ -166,9 +166,9 @@ class _AddPageState extends State<AddPage> {
       'editedTime': DateTime.now(), //FieldValue.serverTimestamp(),
     });
     returnValue.then((value) => FirebaseFirestore.instance
-        .collection('liked')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({'${value.id}': true }, SetOptions(merge: true)));
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc('${value.id}')
+        .set({'liked': true }));
     return returnValue;
   }
 
