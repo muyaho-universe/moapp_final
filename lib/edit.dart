@@ -5,19 +5,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shrine/model/product.dart';
 
 import 'home.dart';
 
 class EditPage extends StatefulWidget {
-  const EditPage({Key? key}) : super(key: key);
-
+  const EditPage({Key? key, required this.product}) : super(key: key);
+  final Product product;
   @override
   State<EditPage> createState() => _EditPageState();
 }
 
 class _EditPageState extends State<EditPage> {
 
-  String defaultImage = "logo.png";
+  String defaultImage = "";
   String defaultImamgeURL = "https://handong.edu/site/handong/res/img/logo.png";
   String pickedImageName = "";
 
@@ -44,6 +45,9 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
+    _productNameController.text = widget.product.name;
+    _priceController.text = widget.product.price as String;
+    _descriptionController.text = widget.product.description;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -59,15 +63,13 @@ class _EditPageState extends State<EditPage> {
             ),
           ),
         ),
-        title: Text("Add"),
+        title: Text("Edit"),
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-
-              addMessageToProduct();
-              uploadFile();
+              updateProduct();
+              isLoaded? uploadFile() : null;
               // FirebaseLoading.loading();
-
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },
@@ -90,7 +92,7 @@ class _EditPageState extends State<EditPage> {
               child: (isLoaded)
                   ? Image.file(File(pickedFile!.path))
                   : Image.network(
-                defaultImamgeURL,
+                widget.product.image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -106,7 +108,7 @@ class _EditPageState extends State<EditPage> {
             SizedBox(
               height: 20,
             ),
-            TextField(
+            TextFormField(
               controller: _productNameController,
               decoration: const InputDecoration(
                 filled: true,
@@ -114,16 +116,18 @@ class _EditPageState extends State<EditPage> {
               ),
             ),
             SizedBox(height: 5),
-            TextField(
+            TextFormField(
               controller: _priceController,
+
               decoration: const InputDecoration(
                 filled: true,
                 labelText: 'Price',
               ),
             ),
             SizedBox(height: 5),
-            TextField(
+            TextFormField(
               controller: _descriptionController,
+
               decoration: const InputDecoration(
                 filled: true,
                 labelText: 'Description',
@@ -134,20 +138,19 @@ class _EditPageState extends State<EditPage> {
       ),
     );
   }
-  Future<DocumentReference> addMessageToProduct() {
+  Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
 
-
-    return FirebaseFirestore.instance
-        .collection('products')
-        .add(<String, dynamic>{
+     FirebaseFirestore.instance
+        .collection('products').doc(widget.product.id)
+        .update(<String, dynamic>{
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
-      'image': isLoaded ? pickedImageName : defaultImage,
+      'image': isLoaded ? pickedImageName : widget.product.image,
       'price': price,
       'liked': 0,
-      'creator': FirebaseAuth.instance.currentUser!.uid,
+      // 'creator': FirebaseAuth.instance.currentUser!.uid,
       'uploadTime' : DateTime.now(),
       'editedTime' : DateTime.now(), //FieldValue.serverTimestamp(),
     });
