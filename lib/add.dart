@@ -38,6 +38,7 @@ class _AddPageState extends State<AddPage> {
   // late XFile? image;
   bool isLoaded = false;
   List<String> url = [];
+
   Future getImageFromGalley() async {
     var image =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
@@ -141,13 +142,19 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
+
+
   Future<DocumentReference> addMessageToProduct() async {
     int price = int.parse(_priceController.text);
-    String image = await FirebaseStorage.instance.ref().child(isLoaded ? pickedImageName : defaultImage,).getDownloadURL();
-
-    return FirebaseFirestore.instance
-        .collection('products')
-        .add(<String, dynamic>{
+    String newID = "";
+    String image = await FirebaseStorage.instance
+        .ref()
+        .child(
+          isLoaded ? pickedImageName : defaultImage,
+        )
+        .getDownloadURL();
+    var returnValue =
+        FirebaseFirestore.instance.collection('products').add(<String, dynamic>{
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
@@ -155,9 +162,14 @@ class _AddPageState extends State<AddPage> {
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime' : DateTime.now(),
-      'editedTime' : DateTime.now(), //FieldValue.serverTimestamp(),
+      'uploadTime': DateTime.now(),
+      'editedTime': DateTime.now(), //FieldValue.serverTimestamp(),
     });
+    returnValue.then((value) => FirebaseFirestore.instance
+        .collection('liked')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({'${value.id}': true }, SetOptions(merge: true)));
+    return returnValue;
   }
 
   Future uploadFile() async {
