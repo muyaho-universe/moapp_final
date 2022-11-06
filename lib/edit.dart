@@ -43,12 +43,20 @@ class _EditPageState extends State<EditPage> {
     });
     uploadFile();
   }
-
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     _productNameController.text = widget.product.name;
     _priceController.text = "${widget.product.price}";
     _descriptionController.text = widget.product.description;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // _productNameController.text = widget.product.name;
+    // _priceController.text = "${widget.product.price}";
+    // _descriptionController.text = widget.product.description;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -109,15 +117,16 @@ class _EditPageState extends State<EditPage> {
             SizedBox(
               height: 20,
             ),
-            TextFormField(
+            TextField(
               controller: _productNameController,
+              // initialValue: widget.product.name,
               decoration: const InputDecoration(
                 filled: true,
                 labelText: 'Product Name',
               ),
             ),
             SizedBox(height: 5),
-            TextFormField(
+            TextField(
               controller: _priceController,
 
               decoration: const InputDecoration(
@@ -126,7 +135,7 @@ class _EditPageState extends State<EditPage> {
               ),
             ),
             SizedBox(height: 5),
-            TextFormField(
+            TextField(
               controller: _descriptionController,
 
               decoration: const InputDecoration(
