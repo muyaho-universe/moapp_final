@@ -156,8 +156,8 @@ class _AddPageState extends State<AddPage> {
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime' : FieldValue.serverTimestamp(),
-      'editedTime' : FieldValue.serverTimestamp(),
+      'uploadTime' : FieldValue.serverTimestamp().toString(),
+      'editedTime' : FieldValue.serverTimestamp().toString(),
     });
   }
 

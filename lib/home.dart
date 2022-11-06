@@ -114,9 +114,9 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
-            print(FirebaseLoading.prints());
+            String time = FieldValue.serverTimestamp() as String;
             // print(FirebaseAuth.instance.currentUser?.uid);
-            print('Menu button');
+            print(time);
           },
         ),
         title: const Text('Main'),
@@ -249,7 +249,7 @@ class FirebaseLoading extends ChangeNotifier {
       notifyListeners();
     });
   }
-  // FirebaseAuth.instance.userChanges().listen();
+
 
   Future<void> loading() async {
     print("loading working");
