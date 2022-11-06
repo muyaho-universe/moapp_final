@@ -284,6 +284,7 @@ class FirebaseLoading extends ChangeNotifier {
       }
       notifyListeners();
     });
+
   }
   static prints(){
     print(ProductsRepository.loadProducts.length);

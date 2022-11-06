@@ -24,6 +24,12 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
+    int liked = widget.product.liked;
+    var isLiked = false;
+
+    var snackBar = SnackBar(
+      content: Text('Yay! A SnackBar!'),
+    );
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -88,9 +94,14 @@ class _DetailPageState extends State<DetailPage> {
                       width: 150,
                     ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          // setState(() {
+                          //   widget.product.price;
+                          // });
+                        },
                         icon: Icon(Icons.thumb_up, color: Colors.red)),
-                    Text("${widget.product.liked }"),
+                    Text("${liked}"),
                   ],
                 ),
                 Text(
