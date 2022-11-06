@@ -90,7 +90,7 @@ class _DetailPageState extends State<DetailPage> {
                     IconButton(
                         onPressed: () {},
                         icon: Icon(Icons.thumb_up, color: Colors.red)),
-                    Text('0'),
+                    Text("${widget.product.liked }"),
                   ],
                 ),
                 Text(

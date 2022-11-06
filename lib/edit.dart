@@ -46,7 +46,7 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     _productNameController.text = widget.product.name;
-    _priceController.text = widget.product.price as String;
+    _priceController.text = "${widget.product.price}";
     _descriptionController.text = widget.product.description;
     return Scaffold(
       appBar: AppBar(
@@ -140,14 +140,14 @@ class _EditPageState extends State<EditPage> {
   }
   Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
-
+    String image = widget.product.image.split("/").last;
      FirebaseFirestore.instance
         .collection('products').doc(widget.product.id)
         .update(<String, dynamic>{
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
-      'image': isLoaded ? pickedImageName : widget.product.image,
+      'image': isLoaded ? pickedImageName : image,
       'price': price,
       'liked': 0,
       // 'creator': FirebaseAuth.instance.currentUser!.uid,
