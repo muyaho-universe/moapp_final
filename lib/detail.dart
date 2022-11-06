@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shrine/home.dart';
 
 import 'model/product.dart';
 import 'package:intl/intl.dart';
@@ -39,15 +41,17 @@ class _DetailPageState extends State<DetailPage> {
                   icon: Icon(Icons.create)),
           (FirebaseAuth.instance.currentUser!.uid == widget.product.creator)
               ? IconButton(
-                  onPressed: () {
-                    print("same");
+                  onPressed: () async {
+                    print(widget.product.id);
                     FirebaseFirestore.instance
-                        .collection('product')
+                        .collection('products')
                         .doc(widget.product.id)
-                        .delete();
+                        .delete().then((value) => print("User Deleted"))
+                        .catchError((error) => print("Failed to delete user: $error"));
+                    Get.off(HomePage());
                   },
                   icon: Icon(Icons.delete))
-              : IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+              : IconButton(onPressed: () {print("not user");}, icon: Icon(Icons.delete)),
         ],
       ),
       body: ListView(
