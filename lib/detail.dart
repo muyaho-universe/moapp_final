@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shrine/edit.dart';
 import 'package:shrine/home.dart';
 
 import 'model/product.dart';
@@ -31,6 +32,7 @@ class _DetailPageState extends State<DetailPage> {
           (FirebaseAuth.instance.currentUser!.uid == widget.product.creator)
               ? IconButton(
                   onPressed: () {
+                    Get.off(EditPage(product: widget.product));
                     print("same");
                   },
                   icon: Icon(Icons.create))
@@ -83,7 +85,7 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                     SizedBox(
-                      width: 220,
+                      width: 150,
                     ),
                     IconButton(
                         onPressed: () {},
