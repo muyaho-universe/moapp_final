@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'model/product.dart';
 import 'package:intl/intl.dart';
+import 'src/widgets.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key, required this.product}) : super(key: key);
@@ -37,34 +38,49 @@ class _DetailPageState extends State<DetailPage> {
               fit: BoxFit.fill,
             ),
           ),
-          Row(
-            children: [
-              Text(widget.product.name),
-              IconButton(onPressed: () {}, icon: Icon(Icons.thumb_up)),
-            ],
+          SizedBox(
+            height: 20,
           ),
-          Text(
-            formatter.format(widget.product.price),
-          ),
-          Divider(
-            height: 8,
-            thickness: 1,
-            indent: 8,
-            endIndent: 8,
-            color: Colors.grey,
-          ),
-          Flexible(
-            child: RichText(
-              maxLines: 100,
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(text: widget.product.description),
-                ],
-                style: const TextStyle(
-                  fontSize: 10.0,
-                  color: Colors.black,
+          Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.product.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 220,
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.thumb_up, color: Colors.red)),
+                    Text('0'),
+                  ],
                 ),
-              ),
+                Text(
+                  formatter.format(widget.product.price,),
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Divider(
+                  height: 8,
+                  thickness: 1,
+                  indent: 8,
+                  endIndent: 8,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 20,),
+                Text(widget.product.description),
+              ],
             ),
           ),
         ],
