@@ -145,6 +145,7 @@ class _AddPageState extends State<AddPage> {
 
   Future<DocumentReference> addMessageToProduct() {
     int price = int.parse(_priceController.text);
+    var time = FieldValue.serverTimestamp();
 
     return FirebaseFirestore.instance
         .collection('products')
@@ -156,8 +157,8 @@ class _AddPageState extends State<AddPage> {
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime' : FieldValue.serverTimestamp(),
-      'editedTime' : FieldValue.serverTimestamp(),
+      'uploadTime' : time,
+      'editedTime' : time, //FieldValue.serverTimestamp(),
     });
   }
 
