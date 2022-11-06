@@ -257,6 +257,7 @@ class FirebaseLoading extends ChangeNotifier {
         .collection('products')
         .snapshots()
         .listen((snapshots) async {
+      ProductsRepository.loadProducts = [];
       for (var doc in snapshots.docs) {
         bool go = true;
         for (var p in ProductsRepository.loadProducts) {
@@ -276,7 +277,6 @@ class FirebaseLoading extends ChangeNotifier {
       }
       notifyListeners();
     });
-
   }
   static prints(){
     print(ProductsRepository.loadProducts.length);
