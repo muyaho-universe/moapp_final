@@ -10,6 +10,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shrine/profile.dart';
 
 import 'add.dart';
 import 'detail.dart';
@@ -186,7 +187,7 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
-            var t = FieldValue.serverTimestamp();
+           Get.to(ProfilePage());
           },
         ),
         title: const Text('Main'),
