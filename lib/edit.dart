@@ -141,15 +141,18 @@ class _EditPageState extends State<EditPage> {
   }
   Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
-    String image = widget.product.image.split("/").last;
-    String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+    String image ="";
+    // String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+    if(isLoaded){
+      image = await FirebaseStorage.instance.ref().child(pickedImageName).getDownloadURL();
+    }
      FirebaseFirestore.instance
         .collection('products').doc(widget.product.id)
         .update(<String, dynamic>{
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
-      'image': isLoaded ? pickedImageName : image2,
+      'image': isLoaded ? image : widget.product.image,
       'price': price,
       'liked': 0,
       // 'creator': FirebaseAuth.instance.currentUser!.uid,
