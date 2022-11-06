@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,15 @@ class _DetailPageState extends State<DetailPage> {
                   },
                   icon: Icon(Icons.create)),
           (FirebaseAuth.instance.currentUser!.uid == widget.product.creator)
-              ? IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+              ? IconButton(
+                  onPressed: () {
+                    print("same");
+                    FirebaseFirestore.instance
+                        .collection('product')
+                        .doc(widget.product.id)
+                        .delete();
+                  },
+                  icon: Icon(Icons.delete))
               : IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
         ],
       ),

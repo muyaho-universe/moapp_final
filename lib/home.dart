@@ -114,9 +114,8 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
-            String time = FieldValue.serverTimestamp() as String;
-            // print(FirebaseAuth.instance.currentUser?.uid);
-            print(time);
+            var t = FieldValue.serverTimestamp();
+
           },
         ),
         title: const Text('Main'),
@@ -275,8 +274,8 @@ class FirebaseLoading extends ChangeNotifier {
             description: doc.get('description'),
             liked: doc.get('liked'),
             creator: doc.get('creator'),
-            uploadTime: doc.get('uploadTime'),
-            editedTime: doc.get('editedTime'),
+            uploadTime: (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
+            editedTime: (doc.data()['editedTime'] as Timestamp).toDate().toString(),
           ));
         }
       }
