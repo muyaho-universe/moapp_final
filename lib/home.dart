@@ -252,11 +252,29 @@ class FirebaseLoading extends ChangeNotifier {
 
   Future<void> loading() async {
     // sleep(const Duration(seconds:1));
+
     print("loading working");
     FirebaseFirestore.instance
         .collection('products')
         .snapshots()
         .listen((snapshots) async {
+      FirebaseFirestore.instance
+          .collection(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots()
+          .listen((snapshot) async {
+        if (snapshot.size == 0) {
+
+          for (var doc in snapshots.docs) {
+
+            FirebaseFirestore.instance
+                .collection(FirebaseAuth.instance.currentUser!.uid)
+                .doc(doc.id)
+                .set({'liked': true}, SetOptions(merge: true));
+          }
+        }
+        notifyListeners();
+      });
+
       ProductsRepository.loadProducts = [];
       for (var doc in snapshots.docs) {
         bool go = true;
@@ -284,6 +302,7 @@ class FirebaseLoading extends ChangeNotifier {
       }
       notifyListeners();
     });
+
     FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .snapshots()

@@ -50,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<UserCredential> signInAsAnonymous() async {
+
     _signOut();
     LoginPage.go = true;
     return await FirebaseAuth.instance.signInAnonymously();
