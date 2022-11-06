@@ -107,7 +107,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -117,7 +116,6 @@ class _HomePageState extends State<HomePage> {
           ),
           onPressed: () {
             var t = FieldValue.serverTimestamp();
-
           },
         ),
         title: const Text('Main'),
@@ -172,48 +170,47 @@ class _HomePageState extends State<HomePage> {
 
       body: Consumer<FirebaseLoading>(
         builder: (context, appState, _) => Column(
-            children: <Widget>[
-              Container(
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: const Icon(Icons.arrow_downward),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  items: query.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+          children: <Widget>[
+            Container(
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
                 ),
-                height: 50,
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                items: query.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
-              SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: SafeArea(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    padding: const EdgeInsets.all(16.0),
-                    childAspectRatio: .75,
-                    children: _buildGridCards(context),
-                  ),
+              height: 50,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              child: SafeArea(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: .75,
+                  children: _buildGridCards(context),
                 ),
               ),
-            ],
-          ),
-
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -232,9 +229,10 @@ class _HomePageState extends State<HomePage> {
 //   return url;
 // }
 class FirebaseLoading extends ChangeNotifier {
-  FirebaseLoading(){
+  FirebaseLoading() {
     init();
   }
+
   Future<void> init() async {
     await Firebase.initializeApp();
 
@@ -250,7 +248,6 @@ class FirebaseLoading extends ChangeNotifier {
       notifyListeners();
     });
   }
-
 
   Future<void> loading() async {
     // sleep(const Duration(seconds:1));
@@ -277,19 +274,31 @@ class FirebaseLoading extends ChangeNotifier {
             description: doc.get('description'),
             liked: doc.get('liked'),
             creator: doc.get('creator'),
-            uploadTime: (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
-            editedTime: (doc.data()['editedTime'] as Timestamp).toDate().toString(),
+            uploadTime:
+                (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
+            editedTime:
+                (doc.data()['editedTime'] as Timestamp).toDate().toString(),
           ));
         }
       }
       notifyListeners();
     });
-
+    FirebaseFirestore.instance
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .listen((snapshot) async {
+      ProductsRepository.doILike = {};
+      for (var doc in snapshot.docs) {
+        ProductsRepository.doILike[doc.id] = doc.get('liked');
+      }
+      notifyListeners();
+    });
   }
-  static prints(){
+
+  static prints() {
     print(ProductsRepository.loadProducts.length);
-    for(var p in ProductsRepository.loadProducts){
-      String ment ="name: " + p.name ;
+    for (var p in ProductsRepository.loadProducts) {
+      String ment = "name: " + p.name;
       print(ment);
     }
   }

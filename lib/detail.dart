@@ -9,6 +9,7 @@ import 'package:shrine/home.dart';
 
 import 'model/product.dart';
 import 'package:intl/intl.dart';
+import 'model/product_repo.dart';
 import 'src/widgets.dart';
 
 class DetailPage extends StatefulWidget {
@@ -20,14 +21,16 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  bool isLiked = false;
+
+
   @override
   Widget build(BuildContext context) {
+    bool isLiked = ProductsRepository.doILike[widget.product.id]!;
 
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
     int liked = widget.product.liked;
-
+    print(isLiked);
 
     var snackBar = SnackBar(
       content: isLiked ? Text('I LIKE IT') : Text("You can only do it once !!"),
@@ -106,7 +109,10 @@ class _DetailPageState extends State<DetailPage> {
                             onPressed: () {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                              liked++;
+                              setState(() {
+                                liked++;
+                                isLiked = !isLiked;
+                              });
                             },
                             icon: Icon(Icons.thumb_up, color: Colors.red),
                           )
@@ -214,20 +220,7 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  void getLiked(String id) {
-    FirebaseFirestore.instance
-        .collection(FirebaseAuth.instance.currentUser!.uid)
-        .doc(id)
-        .snapshots()
-        .listen((snapshot) {
-      if (snapshot.data() != null) {
-        isLiked = snapshot.data()!['liked'] as bool;
-        print(isLiked);
-      }
-    });
-    print(isLiked);
 
-  }
 
   void format() {}
 }
