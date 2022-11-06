@@ -154,6 +154,10 @@ class _AddPageState extends State<AddPage> {
       'name': _productNameController.text,
       'image': isLoaded ? pickedImageName : defaultImage,
       'price': price,
+      'liked': 0,
+      'creator': FirebaseAuth.instance.currentUser!.uid,
+      'uploadTime' : FieldValue.serverTimestamp(),
+      'editedTime' : FieldValue.serverTimestamp(),
     });
   }
 
