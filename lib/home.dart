@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'add.dart';
 import 'detail.dart';
@@ -14,6 +16,7 @@ import 'model/product.dart';
 import 'login.dart';
 import 'model/product_repo.dart';
 import 'model/product_repo2.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -34,8 +37,9 @@ class _HomePageState extends State<HomePage> {
   String dropdownValue = query.first;
 
   List<Card> _buildGridCards(BuildContext context) {
-    ProductsRepository.loadProducts = ProductsRepository.loadProducts.toSet().toList();
+    products = [];
     products = ProductsRepository.loadProducts;
+
     // products = ProductRepo2.loadProductsSet.toList();
     if (products.isEmpty) {
       return const <Card>[];
@@ -101,7 +105,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseLoading.loading();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -155,7 +159,6 @@ class _HomePageState extends State<HomePage> {
       //           }
       //         }
       //         if (go) {
-      //
       //           ProductsRepository.loadProducts.add(Product(
       //             name: one.get('name'),
       //             price: one.get('price'),
@@ -166,7 +169,8 @@ class _HomePageState extends State<HomePage> {
       //       }
       //     }
 
-          body: Column(
+      body: Consumer<FirebaseLoading>(
+        builder: (context, appState, _) => Column(
             children: <Widget>[
               Container(
                 child: DropdownButton<String>(
@@ -208,21 +212,57 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+
+      ),
     );
-        // },
-    //   ),
-    // );
   }
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     LoginPage.go = false;
+    ProductsRepository.loadProducts = [];
     Get.to(LoginPage());
   }
+}
 
 // Future<String> _getImageURL(String imageUrl) async {
 //   final ref = FirebaseStorage.instance.ref().child(imageUrl);
 //   var url = await ref.getDownloadURL();
 //   return url;
 // }
+class FirebaseLoading extends ChangeNotifier {
+  Future<void> loading() async {
+    print("loading working");
+    FirebaseFirestore.instance
+        .collection('products')
+        .snapshots()
+        .listen((snapshots) async {
+      for (var doc in snapshots.docs) {
+        bool go = true;
+        for (var p in ProductsRepository.loadProducts) {
+          if (p.name == doc.get('name')) {
+            go = false;
+          }
+        }
+        if (go) {
+          String image = await FirebaseStorage.instance.ref().child(doc.get('image')).getDownloadURL();
+          ProductsRepository.loadProducts.add(Product(
+            name: doc.get('name'),
+            price: doc.get('price'),
+            image: image,
+            description: doc.get('description'),
+          ));
+        }
+      }
+      notifyListeners();
+    });
+
+  }
+  static prints(){
+    print(ProductsRepository.loadProducts.length);
+    for(var p in ProductsRepository.loadProducts){
+      String ment ="name: " + p.name ;
+      print(ment);
+    }
+  }
 }

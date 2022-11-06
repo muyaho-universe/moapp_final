@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'firebase/load_repo.dart';
 import 'home.dart';
 import 'login.dart';
 // import 'temp.dart';
@@ -23,14 +25,29 @@ class FinalApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shrine',
-      initialRoute: '/login',
-      routes: {
-        '/login': (BuildContext context) => const LoginPage(),
-        '/': (BuildContext context) => HomePage(),
-      },
+    return FutureBuilder(
+        future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
 
+        if(snapshot.hasError){
+          return const Center(
+            child: Text("firebase load failed"),
+          );
+        }
+        if(snapshot.connectionState == ConnectionState.done){
+          return LoginPage();
+        }
+        return const CircularProgressIndicator();
+        // return MaterialApp(
+        //   title: 'Shrine',
+        //   initialRoute: '/login',
+        //   routes: {
+        //     '/login': (BuildContext context) => const LoginPage(),
+        //     '/': (BuildContext context) => HomePage(),
+        //   },
+        //
+        // );
+      }
     );
   }
 }
