@@ -41,6 +41,7 @@ class _EditPageState extends State<EditPage> {
       url = pickedFile!.path.split("/");
       pickedImageName = url.last;
     });
+    uploadFile();
   }
 
   @override
@@ -68,7 +69,7 @@ class _EditPageState extends State<EditPage> {
           TextButton(
             onPressed: () async {
               updateProduct();
-              isLoaded? uploadFile() : null;
+              // isLoaded? uploadFile() : null;
               // FirebaseLoading.loading();
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -141,17 +142,18 @@ class _EditPageState extends State<EditPage> {
   Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
     String image = widget.product.image.split("/").last;
+    String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
      FirebaseFirestore.instance
         .collection('products').doc(widget.product.id)
         .update(<String, dynamic>{
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
-      'image': isLoaded ? pickedImageName : image,
+      'image': isLoaded ? pickedImageName : image2,
       'price': price,
       'liked': 0,
       // 'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime' : DateTime.now(),
+      // 'uploadTime' : DateTime.now(),
       'editedTime' : DateTime.now(), //FieldValue.serverTimestamp(),
     });
   }

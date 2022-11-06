@@ -47,6 +47,7 @@ class _AddPageState extends State<AddPage> {
       url = pickedFile!.path.split("/");
       pickedImageName = url.last;
     });
+    uploadFile();
   }
 
   @override
@@ -70,9 +71,7 @@ class _AddPageState extends State<AddPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-
               addMessageToProduct();
-              uploadFile();
               // FirebaseLoading.loading();
 
               Navigator.push(
@@ -142,9 +141,9 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Future<DocumentReference> addMessageToProduct() {
+  Future<DocumentReference> addMessageToProduct() async {
     int price = int.parse(_priceController.text);
-
+    String image = await FirebaseStorage.instance.ref().child(isLoaded ? pickedImageName : defaultImage,).getDownloadURL();
 
     return FirebaseFirestore.instance
         .collection('products')
@@ -152,7 +151,7 @@ class _AddPageState extends State<AddPage> {
       'description': _descriptionController.text,
       // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
-      'image': isLoaded ? pickedImageName : defaultImage,
+      'image': image,
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
