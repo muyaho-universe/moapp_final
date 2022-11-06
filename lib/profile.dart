@@ -8,6 +8,7 @@ import 'model/product_repo.dart';
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key? key}) : super(key: key);
   String defaultImamgeURL = "https://handong.edu/site/handong/res/img/logo.png";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +33,14 @@ class ProfilePage extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width / 4,
                     height: MediaQuery.of(context).size.height / 4,
-                    child:Image.network(
+                    child: Image.network(
                       defaultImamgeURL,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(FirebaseAuth.instance.currentUser!.uid),
                   Divider(
                     height: 8,
@@ -47,14 +50,52 @@ class ProfilePage extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   Text(FirebaseAuth.instance.currentUser!.email!),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Text("Daeseok Kim"),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Text("I promise to take the test honestly before GOD ."),
                 ],
               ),
             )
-          : Container(),
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 4,
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Image.network(
+                      defaultImamgeURL,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text("anonymous uid"),
+                  Divider(
+                    height: 8,
+                    thickness: 1,
+                    indent: 8,
+                    endIndent: 8,
+                    color: Colors.grey,
+                  ),
+                  Text("Anonymous"),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text("Daeseok Kim"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text("I promise to take the test honestly before GOD ."),
+                ],
+              ),
+            ),
     );
   }
 
