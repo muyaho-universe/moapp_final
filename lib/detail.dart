@@ -20,15 +20,17 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  bool isLiked = false;
   @override
   Widget build(BuildContext context) {
+
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
     int liked = widget.product.liked;
-    var isLiked = false;
+
 
     var snackBar = SnackBar(
-      content: Text('Yay! A SnackBar!'),
+      content: isLiked ? Text('I LIKE IT') : Text("You can only do it once !!"),
     );
     return Scaffold(
       appBar: AppBar(
@@ -54,12 +56,18 @@ class _DetailPageState extends State<DetailPage> {
                     FirebaseFirestore.instance
                         .collection('products')
                         .doc(widget.product.id)
-                        .delete().then((value) => print("User Deleted"))
-                        .catchError((error) => print("Failed to delete user: $error"));
+                        .delete()
+                        .then((value) => print("User Deleted"))
+                        .catchError(
+                            (error) => print("Failed to delete user: $error"));
                     Get.off(HomePage());
                   },
                   icon: Icon(Icons.delete))
-              : IconButton(onPressed: () {print("not user");}, icon: Icon(Icons.delete)),
+              : IconButton(
+                  onPressed: () {
+                    print("not user");
+                  },
+                  icon: Icon(Icons.delete)),
         ],
       ),
       body: ListView(
@@ -93,14 +101,22 @@ class _DetailPageState extends State<DetailPage> {
                     SizedBox(
                       width: 150,
                     ),
-                    IconButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          // setState(() {
-                          //   widget.product.price;
-                          // });
-                        },
-                        icon: Icon(Icons.thumb_up, color: Colors.red)),
+                    isLiked
+                        ? IconButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              liked++;
+                            },
+                            icon: Icon(Icons.thumb_up, color: Colors.red),
+                          )
+                        : IconButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
+                            icon: Icon(Icons.thumb_up, color: Colors.red),
+                          ),
                     Text("${liked}"),
                   ],
                 ),
@@ -196,6 +212,21 @@ class _DetailPageState extends State<DetailPage> {
         ],
       ),
     );
+  }
+
+  void getLiked(String id) {
+    FirebaseFirestore.instance
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc(id)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.data() != null) {
+        isLiked = snapshot.data()!['liked'] as bool;
+        print(isLiked);
+      }
+    });
+    print(isLiked);
+
   }
 
   void format() {}
