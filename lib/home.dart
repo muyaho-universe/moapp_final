@@ -268,6 +268,7 @@ class FirebaseLoading extends ChangeNotifier {
         if (go) {
           String image = await FirebaseStorage.instance.ref().child(doc.get('image')).getDownloadURL();
           ProductsRepository.loadProducts.add(Product(
+            id: doc.id,
             name: doc.get('name'),
             price: doc.get('price'),
             image: image,
