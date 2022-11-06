@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -251,6 +253,7 @@ class FirebaseLoading extends ChangeNotifier {
 
 
   Future<void> loading() async {
+    // sleep(const Duration(seconds:1));
     print("loading working");
     FirebaseFirestore.instance
         .collection('products')

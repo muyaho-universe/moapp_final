@@ -38,7 +38,6 @@ class _AddPageState extends State<AddPage> {
   // late XFile? image;
   bool isLoaded = false;
   List<String> url = [];
-
   Future getImageFromGalley() async {
     var image =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
@@ -48,8 +47,6 @@ class _AddPageState extends State<AddPage> {
       url = pickedFile!.path.split("/");
       pickedImageName = url.last;
     });
-    print(pickedFile!.path);
-    print(url.last);
   }
 
   @override
@@ -73,9 +70,11 @@ class _AddPageState extends State<AddPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () async {
+
               addMessageToProduct();
               uploadFile();
               // FirebaseLoading.loading();
+
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },
@@ -145,7 +144,7 @@ class _AddPageState extends State<AddPage> {
 
   Future<DocumentReference> addMessageToProduct() {
     int price = int.parse(_priceController.text);
-    var time = FieldValue.serverTimestamp();
+
 
     return FirebaseFirestore.instance
         .collection('products')
@@ -157,8 +156,8 @@ class _AddPageState extends State<AddPage> {
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime' : time,
-      'editedTime' : time, //FieldValue.serverTimestamp(),
+      'uploadTime' : DateTime.now(),
+      'editedTime' : DateTime.now(), //FieldValue.serverTimestamp(),
     });
   }
 
@@ -166,7 +165,6 @@ class _AddPageState extends State<AddPage> {
     try {
       final ref = storage.ref().child(url.last);
       await ref.putFile(File(pickedFile!.path));
-
     } catch (e) {
       print('error occured');
     }
