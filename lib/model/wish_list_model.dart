@@ -2,58 +2,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shrine/model/product.dart';
+import 'package:shrine/model/product_repo.dart';
 
 class CartProvider with ChangeNotifier {
   late CollectionReference wishReference;
   List<Product> wishList = [];
 
   CartProvider({reference}) {
-    wishReference = reference ?? FirebaseFirestore.instance.collection('wish');
+    wishReference = reference ??
+        FirebaseFirestore.instance
+            .collection('wish')
+            .doc(FirebaseAuth.instance.currentUser!.uid).collection("wish");
   }
 
-  Future<void> fetchCartItemsOrCreate(String uid) async {
-    if (uid == ''){
-      return ;
-    }
-    final wishSnapshot = await wishReference.doc(uid).get();
-    if(wishSnapshot.exists) {
-      Map<String, dynamic> wishItemsMap = wishSnapshot.data() as Map<String, dynamic>;
-      List<Product> temp = [];
-      for (var item in wishItemsMap['items']) {
-        temp.add(Product.fromMap(item));
+  Future<void> fetchWishItemsOrCreate() async {
+    wishReference.snapshots().listen((snapshots) {
+      ProductsRepository.doIWish = {};
+      for (var doc in snapshots.docs) {
+        ProductsRepository.doIWish[doc.id] = doc.get('wish');
       }
-      wishList = temp;
       notifyListeners();
-    } else {
-      await wishReference.doc(uid).set({'items': []});
-      notifyListeners();
-    }
+    });
   }
 
-  Future<void> addCartItem(String uid, Product product) async {
-    wishList.add(product);
-    Map<String, dynamic> cartItemsMap = {
-      'items': wishList.map( (item) {
-        return item.toSnapshot();
-      }).toList()
-    };
-    await wishReference.doc(uid).set(cartItemsMap);
+  Future<void> addCartItem(Product product) async {
+    ProductsRepository.doIWish[product.id] = true;
+    await wishReference.doc(product.id).set({'wish': true}, SetOptions(merge: true));
     notifyListeners();
   }
 
-  Future<void> removeCartItem(String uid, Item item) async {
-    cartItems.removeWhere((element) => element.id == item.id);
-    Map<String, dynamic> cartItemsMap = {
-      'items': cartItems.map((item) {
-        return item.toSnapshot();
-      }).toList()
-    };
+  Future<void> removeCartItem(Product product) async {
+    ProductsRepository.doIWish[product.id] = false;
 
-    await cartReference.doc(uid).set(cartItemsMap);
+    await wishReference.doc(product.id).set({'wish': false}, SetOptions(merge: true));
     notifyListeners();
   }
 
-  bool isCartItemIn(Item item) {
-    return cartItems.any((element) => element.id == item.id);
-  }
+  // bool isCartItemIn(Item item) {
+  //   return cartItems.any((element) => element.id == item.id);
+  // }
 }

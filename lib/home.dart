@@ -232,57 +232,58 @@ class _HomePageState extends State<HomePage> {
       //     }
 
       body: Consumer<FirebaseLoading>(
-        builder: (context, appState, _) => Column(
-          children: <Widget>[
-            Container(
-              child: DropdownButton<String>(
-                value: dropdownValue,
-                icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
-                underline: Container(
-                  height: 2,
-                  color: Colors.deepPurpleAccent,
+        builder: (context, appState, _) =>
+            Column(
+              children: <Widget>[
+                Container(
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dropdownValue = value!;
+                        if (value! == 'ASC') {
+                          orderDesc = false;
+                        } else {
+                          orderDesc = true;
+                        }
+                      });
+                      print("changed");
+                      print(orderDesc);
+                    },
+                    items: query.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  height: 50,
                 ),
-                onChanged: (String? value) {
-                  // This is called when the user selects an item.
-                  setState(() {
-                    dropdownValue = value!;
-                    if (value! == 'ASC') {
-                      orderDesc = false;
-                    } else {
-                      orderDesc = true;
-                    }
-                  });
-                  print("changed");
-                  print(orderDesc);
-                },
-                items: query.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              height: 50,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: SafeArea(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.all(16.0),
-                  childAspectRatio: .75,
-                  children: orderDesc
-                      ? _buildReverseGridCards(context)
-                      : _buildGridCards(context),
+                SizedBox(
+                  height: 15,
                 ),
-              ),
+                Expanded(
+                  child: SafeArea(
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      padding: const EdgeInsets.all(16.0),
+                      childAspectRatio: .75,
+                      children: orderDesc
+                          ? _buildReverseGridCards(context)
+                          : _buildGridCards(context),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }
@@ -332,7 +333,25 @@ class FirebaseLoading extends ChangeNotifier {
             FirebaseFirestore.instance
                 .collection(FirebaseAuth.instance.currentUser!.uid)
                 .doc(doc.id)
-                .set({'liked': true, 'wish':false}, SetOptions(merge: true));
+                .set({'liked': true, 'wish': false}, SetOptions(merge: true));
+          }
+        }
+        notifyListeners();
+      });
+
+      FirebaseFirestore.instance
+          .collection('wish')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("wish")
+          .snapshots()
+      .listen((snapshot) {
+        if(snapshots.size == 0){
+          for (var doc in snapshots.docs) {
+            FirebaseFirestore.instance
+                .collection('wish')
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .collection("wish")
+                .doc(doc.id).set({'wish': false}, SetOptions(merge: true));
           }
         }
         notifyListeners();
@@ -358,9 +377,9 @@ class FirebaseLoading extends ChangeNotifier {
               liked: doc.get('liked'),
               creator: doc.get('creator'),
               uploadTime:
-                  (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
+              (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
               editedTime:
-                  (doc.data()['editedTime'] as Timestamp).toDate().toString(),
+              (doc.data()['editedTime'] as Timestamp).toDate().toString(),
 
             ));
           } catch (e) {}
@@ -401,7 +420,7 @@ class FirebaseLoading extends ChangeNotifier {
             "uid": FirebaseAuth.instance.currentUser!.uid,
           }, SetOptions(merge: true));
         }
-        else{
+        else {
           FirebaseFirestore.instance
               .collection('user')
               .doc(FirebaseAuth.instance.currentUser!.uid)
