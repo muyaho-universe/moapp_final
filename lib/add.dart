@@ -73,7 +73,6 @@ class _AddPageState extends State<AddPage> {
           TextButton(
             onPressed: () async {
               addMessageToProduct();
-              // FirebaseLoading.loading();
 
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -142,9 +141,8 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-
-
   Future<DocumentReference> addMessageToProduct() async {
+    var time = FieldValue.serverTimestamp();
     int price = int.parse(_priceController.text);
     String newID = "";
     String image = await FirebaseStorage.instance
@@ -162,13 +160,13 @@ class _AddPageState extends State<AddPage> {
       'price': price,
       'liked': 0,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'uploadTime': DateTime.now(),
-      'editedTime': DateTime.now(), //FieldValue.serverTimestamp(),
+      'uploadTime': time,
+      'editedTime': time, //FieldValue.serverTimestamp(),
     });
     returnValue.then((value) => FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('${value.id}')
-        .set({'liked': true }));
+        .set({'liked': true}));
     return returnValue;
   }
 
