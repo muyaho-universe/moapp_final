@@ -10,6 +10,7 @@ import 'package:shrine/home.dart';
 import 'model/product.dart';
 import 'package:intl/intl.dart';
 import 'model/product_repo.dart';
+import 'model/wish_list_model.dart';
 import 'src/widgets.dart';
 
 class DetailPage extends StatefulWidget {
@@ -23,7 +24,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   bool isFirst = true;
-
+  final wishProvider = Provider.of<WishProvider>(context);
 
   @override
   Widget build(BuildContext context) {

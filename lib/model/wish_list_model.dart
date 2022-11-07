@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shrine/model/product.dart';
 import 'package:shrine/model/product_repo.dart';
 
-class CartProvider with ChangeNotifier {
+class WishProvider with ChangeNotifier {
   late CollectionReference wishReference;
   List<Product> wishList = [];
 
-  CartProvider({reference}) {
+  WishProvider({reference}) {
     wishReference = reference ??
         FirebaseFirestore.instance
             .collection('wish')
