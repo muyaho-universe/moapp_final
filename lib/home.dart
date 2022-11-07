@@ -324,19 +324,15 @@ class FirebaseLoading extends ChangeNotifier {
         .snapshots()
         .listen((snapshots) async {
       FirebaseFirestore.instance
-          .collection('infos')
-          .doc('users')
           .collection(FirebaseAuth.instance.currentUser!.uid)
           .snapshots()
           .listen((snapshot) async {
         if (snapshot.size == 0) {
           for (var doc in snapshots.docs) {
             FirebaseFirestore.instance
-                .collection('infos')
-                .doc('users')
                 .collection(FirebaseAuth.instance.currentUser!.uid)
                 .doc(doc.id)
-                .set({'liked': true, 'wish': false}, SetOptions(merge: true));
+                .set({'liked': true, 'wish':false}, SetOptions(merge: true));
           }
         }
         notifyListeners();
@@ -365,6 +361,7 @@ class FirebaseLoading extends ChangeNotifier {
                   (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
               editedTime:
                   (doc.data()['editedTime'] as Timestamp).toDate().toString(),
+
             ));
           } catch (e) {}
         }
@@ -379,7 +376,6 @@ class FirebaseLoading extends ChangeNotifier {
       ProductsRepository.doILike = {};
       for (var doc in snapshot.docs) {
         ProductsRepository.doILike[doc.id] = doc.get('liked');
-        ProductsRepository.doIWish[doc.id] = doc.get('wish');
       }
       notifyListeners();
     });
@@ -404,7 +400,8 @@ class FirebaseLoading extends ChangeNotifier {
             'status_message': "I promise to take the test honestly before GOD.",
             "uid": FirebaseAuth.instance.currentUser!.uid,
           }, SetOptions(merge: true));
-        } else {
+        }
+        else{
           FirebaseFirestore.instance
               .collection('user')
               .doc(FirebaseAuth.instance.currentUser!.uid)
