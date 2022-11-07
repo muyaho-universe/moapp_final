@@ -413,6 +413,9 @@ class FirebaseLoading extends ChangeNotifier {
       notifyListeners();
     });
   }
+  Future<void> wishMaker() async {
+
+  }
 
   static prints() {
     print(ProductsRepository.loadProducts.length);
