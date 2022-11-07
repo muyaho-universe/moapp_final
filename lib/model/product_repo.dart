@@ -8,6 +8,7 @@ import 'product.dart';
 class ProductsRepository {
   static List<Product> loadProducts = [];
   static Map<String, bool> doILike = {};
+  static Map<String, bool> doIWish = {};
 
   // static Future<void> getURL() async {
   //   var loadProduct = loadProducts.toSet();
