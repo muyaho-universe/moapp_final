@@ -32,6 +32,7 @@ class Product {
     required this.price,
     required this.image,
     required this.description,
+    required this.wish,
   });
 
   final String id;
@@ -45,4 +46,6 @@ class Product {
 
   final String uploadTime;
   final String editedTime;
+
+  final bool wish;
 }

@@ -361,6 +361,7 @@ class FirebaseLoading extends ChangeNotifier {
                   (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
               editedTime:
                   (doc.data()['editedTime'] as Timestamp).toDate().toString(),
+              wish: false,
             ));
           } catch (e) {}
         }
@@ -414,6 +415,9 @@ class FirebaseLoading extends ChangeNotifier {
     });
   }
   Future<void> wishMaker() async {
+    for(var product in ProductsRepository.loadProducts){
+
+    }
 
   }
 
