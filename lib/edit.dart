@@ -150,6 +150,7 @@ class _EditPageState extends State<EditPage> {
   Future<void> updateProduct() async {
     int price = int.parse(_priceController.text);
     String image ="";
+    var time = FieldValue.serverTimestamp();
     // String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
     if(isLoaded){
       image = await FirebaseStorage.instance.ref().child(pickedImageName).getDownloadURL();
@@ -164,7 +165,7 @@ class _EditPageState extends State<EditPage> {
       'price': price,
       // 'creator': FirebaseAuth.instance.currentUser!.uid,
       // 'uploadTime' : DateTime.now(),
-      'editedTime' : DateTime.now(), //FieldValue.serverTimestamp(),
+      'editedTime' : time, //FieldValue.serverTimestamp(),
     });
   }
 
