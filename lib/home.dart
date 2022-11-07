@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
             semanticLabel: 'menu',
           ),
           onPressed: () {
-           Get.to(ProfilePage());
+            Get.to(ProfilePage());
           },
         ),
         title: const Text('Main'),
@@ -200,7 +200,6 @@ class _HomePageState extends State<HomePage> {
               Get.to(AddPage());
             },
           ),
-
         ],
       ),
       // body: StreamBuilder(
@@ -287,8 +286,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 }
 
 // Future<String> _getImageURL(String imageUrl) async {
@@ -351,7 +348,7 @@ class FirebaseLoading extends ChangeNotifier {
         }
         if (go) {
           // String image = await FirebaseStorage.instance.ref().child(doc.get('image')).getDownloadURL();
-          try{
+          try {
             ProductsRepository.loadProducts.add(Product(
               id: doc.id,
               name: doc.get('name'),
@@ -361,12 +358,11 @@ class FirebaseLoading extends ChangeNotifier {
               liked: doc.get('liked'),
               creator: doc.get('creator'),
               uploadTime:
-              (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
+                  (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
               editedTime:
-              (doc.data()['editedTime'] as Timestamp).toDate().toString(),
+                  (doc.data()['editedTime'] as Timestamp).toDate().toString(),
             ));
-          }catch(e){
-          }
+          } catch (e) {}
         }
       }
       notifyListeners();
@@ -379,6 +375,40 @@ class FirebaseLoading extends ChangeNotifier {
       ProductsRepository.doILike = {};
       for (var doc in snapshot.docs) {
         ProductsRepository.doILike[doc.id] = doc.get('liked');
+      }
+      notifyListeners();
+    });
+
+    FirebaseFirestore.instance
+        .collection('user')
+        .snapshots()
+        .listen((snapshots) {
+      bool first = true;
+      for (var snap in snapshots.docs) {
+        if (snap.id == FirebaseAuth.instance.currentUser!.uid) first = false;
+      }
+      if (first) {
+        print("welcome");
+        if (LoginPage.isGoogle) {
+          FirebaseFirestore.instance
+              .collection('user')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .set({
+            'email': FirebaseAuth.instance.currentUser!.email,
+            'name': FirebaseAuth.instance.currentUser!.displayName,
+            'status_message': "I promise to take the test honestly before GOD.",
+            "uid": FirebaseAuth.instance.currentUser!.uid,
+          }, SetOptions(merge: true));
+        }
+        else{
+          FirebaseFirestore.instance
+              .collection('user')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .set({
+            'status_message': "I promise to take the test honestly before GOD.",
+            "uid": FirebaseAuth.instance.currentUser!.uid,
+          }, SetOptions(merge: true));
+        }
       }
       notifyListeners();
     });
