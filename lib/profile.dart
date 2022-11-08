@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.logout,
+              Icons.exit_to_app,
               semanticLabel: 'filter',
             ),
             onPressed: () {
@@ -103,6 +103,8 @@ class ProfilePage extends StatelessWidget {
     await FirebaseAuth.instance.signOut();
     LoginPage.go = false;
     ProductsRepository.loadProducts = [];
+    ProductsRepository.doIWish = {};
+    ProductsRepository.doILike = {};
     Get.to(LoginPage());
   }
 }

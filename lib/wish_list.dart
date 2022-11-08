@@ -24,33 +24,55 @@ class _WishListPageState extends State<WishListPage> {
       return const <Card>[];
     }
 
-    for(var p in products2){
+    for (var p in products2) {
       var wish = ProductsRepository.doIWish[p.id]!;
-      if(wish) products.add(p);
+      if (wish) products.add(p);
     }
 
     return products.map((product) {
-
-
       return Card(
-              clipBehavior: Clip.antiAlias,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 50,
-                    height: 80,
-                    child: Image.network(
-                      product.image,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(product.name),
-                ],
+        clipBehavior: Clip.antiAlias,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 50,
+              height: 80,
+              child: Image.network(
+                product.image,
+                fit: BoxFit.fill,
               ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Flexible(
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: product.name,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+            ),
+            IconButton(
+              onPressed: () {
+                wishProvider.removeCartItem(product);
+              },
+              icon: Icon(Icons.delete),
+            ),
+          ],
+        ),
       );
     }).toList();
   }
