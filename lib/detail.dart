@@ -31,7 +31,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final wishProvider = Provider.of<WishProvider>(context);
     bool isLiked = ProductsRepository.doILike[widget.product.id]!;
-
+    var wish = ProductsRepository.doIWish[widget.product.id]!;
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
@@ -239,6 +239,22 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if(!wish){
+            wishProvider.addCartItem(widget.product);
+            // setState(() {
+            //   ProductsRepository.doIWish[widget.product.id] = true;
+            // });
+
+          }
+          else{
+            print("already on list");
+          }
+        },
+        // backgroundColor: Colors.green,
+        child: Icon(wish ? Icons.check : Icons.shopping_cart),
       ),
     );
   }
