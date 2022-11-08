@@ -200,6 +200,15 @@ class _HomePageState extends State<HomePage> {
               Get.to(AddPage());
             },
           ),
+          IconButton(
+            icon: const Icon(
+              Icons.shopping_cart,
+            ),
+            onPressed: () {
+              print("cart");
+              // Get.to(AddPage());
+            },
+          ),
         ],
       ),
       // body: StreamBuilder(
@@ -345,7 +354,7 @@ class FirebaseLoading extends ChangeNotifier {
           .collection("wish")
           .snapshots()
       .listen((snapshot) {
-        if(snapshots.size == 0){
+        if(snapshot.size == 0){
           for (var doc in snapshots.docs) {
             FirebaseFirestore.instance
                 .collection('wish')
