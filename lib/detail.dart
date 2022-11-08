@@ -31,7 +31,10 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final wishProvider = Provider.of<WishProvider>(context);
     bool isLiked = ProductsRepository.doILike[widget.product.id]!;
-    var wish = ProductsRepository.doIWish[widget.product.id]!;
+    var wish = false;
+    if(ProductsRepository.doIWish[widget.product.id]! != null){
+      wish = true;
+    };
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
