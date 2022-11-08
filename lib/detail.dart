@@ -244,9 +244,9 @@ class _DetailPageState extends State<DetailPage> {
         onPressed: () {
           if(!wish){
             wishProvider.addCartItem(widget.product);
-            // setState(() {
-            //   ProductsRepository.doIWish[widget.product.id] = true;
-            // });
+            setState(() {
+              ProductsRepository.doIWish[widget.product.id] = true;
+            });
 
           }
           else{
