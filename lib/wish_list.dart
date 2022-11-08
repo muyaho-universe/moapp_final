@@ -17,17 +17,22 @@ class _WishListPageState extends State<WishListPage> {
 
   List<Card> _buildListCards(BuildContext context) {
     final wishProvider = Provider.of<WishProvider>(context);
-    List<Product> products = ProductsRepository.loadProducts;
+    List<Product> products2 = ProductsRepository.loadProducts;
+    List<Product> products = [];
 
-    if (products.isEmpty) {
+    if (products2.isEmpty) {
       return const <Card>[];
     }
 
-    return products.map((product) {
-      var wish = ProductsRepository.doIWish[product.id]!;
+    for(var p in products2){
+      var wish = ProductsRepository.doIWish[p.id]!;
+      if(wish) products.add(p);
+    }
 
-      return wish
-          ? Card(
+    return products.map((product) {
+
+
+      return Card(
               clipBehavior: Clip.antiAlias,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +51,7 @@ class _WishListPageState extends State<WishListPage> {
                   Text(product.name),
                 ],
               ),
-            )
-          : Card();
+      );
     }).toList();
   }
 
