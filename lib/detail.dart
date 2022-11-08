@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shrine/edit.dart';
 import 'package:shrine/home.dart';
 
@@ -24,10 +25,11 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   bool isFirst = true;
-  final wishProvider = Provider.of<WishProvider>(context);
+
 
   @override
   Widget build(BuildContext context) {
+    final wishProvider = Provider.of<WishProvider>(context);
     bool isLiked = ProductsRepository.doILike[widget.product.id]!;
 
     final NumberFormat formatter = NumberFormat.simpleCurrency(

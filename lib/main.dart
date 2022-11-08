@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => WishProvider()),
+        ChangeNotifierProvider(create: (context) => WishProvider()),
         ChangeNotifierProvider(create: (context) => FirebaseLoading()),
       ],
       child: GetMaterialApp(
