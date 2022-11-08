@@ -10,6 +10,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shrine/model/wish_list_model.dart';
 import 'package:shrine/profile.dart';
 
 import 'add.dart';
@@ -305,6 +306,8 @@ class _HomePageState extends State<HomePage> {
 // }
 class FirebaseLoading extends ChangeNotifier {
   FirebaseLoading() {
+    WishProvider w = new WishProvider();
+    w.fetchWishItemsOrCreate();
     init();
   }
 

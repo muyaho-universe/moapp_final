@@ -167,6 +167,12 @@ class _AddPageState extends State<AddPage> {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('${value.id}')
         .set({'liked': true}));
+    returnValue.then((value) => FirebaseFirestore.instance
+        .collection('wish')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('wish')
+        .doc('${value.id}')
+        .set({'wish': false}));
     return returnValue;
   }
 
