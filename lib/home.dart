@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shrine/model/wish_list_model.dart';
 import 'package:shrine/profile.dart';
+import 'package:shrine/wish_list.dart';
 
 import 'add.dart';
 import 'detail.dart';
@@ -24,6 +25,7 @@ import 'dart:async';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
+  static bool isFirstAnonmyous = false;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,12 +39,12 @@ class _HomePageState extends State<HomePage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   late QuerySnapshot querySnapshot;
   List<Product> products = [];
-  static bool isFirst = true;
 
   static List<String> query = <String>['ASC', 'DESC'];
   String dropdownValue = query.first;
 
   List<Card> _buildGridCards(BuildContext context) {
+    if (!LoginPage.isGoogle) {}
     products = [];
 
     products = ProductsRepository.loadProducts;
@@ -56,14 +58,19 @@ class _HomePageState extends State<HomePage> {
         locale: Localizations.localeOf(context).toString());
 
     return products.map((product) {
-      bool wish = ProductsRepository.doIWish[product.id]!;
+      bool wish = false;
+      if (ProductsRepository.doIWish[product.id] != null) {
+        wish = ProductsRepository.doIWish[product.id]!;
+        print("null");
+      }
+
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Stack(
-              children:<Widget> [
+              children: <Widget>[
                 AspectRatio(
                   aspectRatio: 18 / 11,
                   child: Image.network(product.image),
@@ -223,8 +230,7 @@ class _HomePageState extends State<HomePage> {
               Icons.shopping_cart,
             ),
             onPressed: () {
-              print("cart");
-              // Get.to(AddPage());
+              Get.to(WishListPage());
             },
           ),
         ],
@@ -259,58 +265,57 @@ class _HomePageState extends State<HomePage> {
       //     }
 
       body: Consumer<FirebaseLoading>(
-        builder: (context, appState, _) =>
-            Column(
-              children: <Widget>[
-                Container(
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? value) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        dropdownValue = value!;
-                        if (value! == 'ASC') {
-                          orderDesc = false;
-                        } else {
-                          orderDesc = true;
-                        }
-                      });
-                      print("changed");
-                      print(orderDesc);
-                    },
-                    items: query.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  height: 50,
+        builder: (context, appState, _) => Column(
+          children: <Widget>[
+            Container(
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                Expanded(
-                  child: SafeArea(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      padding: const EdgeInsets.all(16.0),
-                      childAspectRatio: .75,
-                      children: orderDesc
-                          ? _buildReverseGridCards(context)
-                          : _buildGridCards(context),
-                    ),
-                  ),
-                ),
-              ],
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    dropdownValue = value!;
+                    if (value! == 'ASC') {
+                      orderDesc = false;
+                    } else {
+                      orderDesc = true;
+                    }
+                  });
+                  print("changed");
+                  print(orderDesc);
+                },
+                items: query.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              height: 50,
             ),
+            SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              child: SafeArea(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: .75,
+                  children: orderDesc
+                      ? _buildReverseGridCards(context)
+                      : _buildGridCards(context),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -373,14 +378,15 @@ class FirebaseLoading extends ChangeNotifier {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("wish")
           .snapshots()
-      .listen((snapshot) {
-        if(snapshot.size == 0){
+          .listen((snapshot) {
+        if (snapshot.size == 0) {
           for (var doc in snapshots.docs) {
             FirebaseFirestore.instance
                 .collection('wish')
                 .doc(FirebaseAuth.instance.currentUser!.uid)
                 .collection("wish")
-                .doc(doc.id).set({'wish': false}, SetOptions(merge: true));
+                .doc(doc.id)
+                .set({'wish': false}, SetOptions(merge: true));
           }
         }
         notifyListeners();
@@ -406,10 +412,9 @@ class FirebaseLoading extends ChangeNotifier {
               liked: doc.get('liked'),
               creator: doc.get('creator'),
               uploadTime:
-              (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
+                  (doc.data()['uploadTime'] as Timestamp).toDate().toString(),
               editedTime:
-              (doc.data()['editedTime'] as Timestamp).toDate().toString(),
-
+                  (doc.data()['editedTime'] as Timestamp).toDate().toString(),
             ));
           } catch (e) {}
         }
@@ -448,8 +453,7 @@ class FirebaseLoading extends ChangeNotifier {
             'status_message': "I promise to take the test honestly before GOD.",
             "uid": FirebaseAuth.instance.currentUser!.uid,
           }, SetOptions(merge: true));
-        }
-        else {
+        } else {
           FirebaseFirestore.instance
               .collection('user')
               .doc(FirebaseAuth.instance.currentUser!.uid)
