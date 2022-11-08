@@ -56,14 +56,31 @@ class _HomePageState extends State<HomePage> {
         locale: Localizations.localeOf(context).toString());
 
     return products.map((product) {
+      bool wish = ProductsRepository.doIWish[product.id]!;
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18 / 11,
-              child: Image.network(product.image),
+            Stack(
+              children:<Widget> [
+                AspectRatio(
+                  aspectRatio: 18 / 11,
+                  child: Image.network(product.image),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        wish ? Icons.check_circle : null,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             Expanded(
               child: Padding(
