@@ -33,6 +33,7 @@ class _DetailPageState extends State<DetailPage> {
     bool isLiked = ProductsRepository.doILike[widget.product.id]!;
     var wish = false;
     if(ProductsRepository.doIWish[widget.product.id]! != null){
+      print("wish is null, let's chankge");
       wish = true;
     };
     final NumberFormat formatter = NumberFormat.simpleCurrency(
@@ -77,6 +78,7 @@ class _DetailPageState extends State<DetailPage> {
                   icon: Icon(Icons.delete))
               : IconButton(
                   onPressed: () {
+                    print(wish);
                     print("not user");
                   },
                   icon: Icon(Icons.delete)),
@@ -245,7 +247,7 @@ class _DetailPageState extends State<DetailPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if(!wish){
+          if(!wish){ //wish -> false !wish -> true
             wishProvider.addCartItem(widget.product);
             setState(() {
               ProductsRepository.doIWish[widget.product.id] = true;

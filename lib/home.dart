@@ -63,7 +63,8 @@ class _HomePageState extends State<HomePage> {
         wish = ProductsRepository.doIWish[product.id]!;
         print("null");
       }
-
+      String t = product.name + "is " + wish.toString();
+      print(t);
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
