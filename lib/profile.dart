@@ -34,7 +34,7 @@ class ProfilePage extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 4,
                     height: MediaQuery.of(context).size.height / 4,
                     child: Image.network(
-                      defaultImamgeURL,
+                      FirebaseAuth.instance.currentUser!.photoURL!,
                       fit: BoxFit.cover,
                     ),
                   ),
