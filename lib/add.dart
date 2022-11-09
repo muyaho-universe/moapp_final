@@ -154,7 +154,6 @@ class _AddPageState extends State<AddPage> {
     var returnValue =
         FirebaseFirestore.instance.collection('products').add(<String, dynamic>{
       'description': _descriptionController.text,
-      // 'timestamp': DateTime.now().toString(),
       'name': _productNameController.text,
       'image': image,
       'price': price,

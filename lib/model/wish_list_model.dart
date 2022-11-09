@@ -38,8 +38,4 @@ class WishProvider with ChangeNotifier {
     await wishReference.doc(product.id).set({'wish': false}, SetOptions(merge: true));
     notifyListeners();
   }
-
-  // bool isCartItemIn(Item item) {
-  //   return cartItems.any((element) => element.id == item.id);
-  // }
 }

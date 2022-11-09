@@ -34,7 +34,7 @@ class _DetailPageState extends State<DetailPage> {
     bool? temp = ProductsRepository.doIWish[widget.product.id] ;
     bool wish = false;
     if(temp != null && temp == true){
-      print("wish is null, let's chankge");
+      // print("wish is null, let's chankge");
       wish = true;
     };
     final NumberFormat formatter = NumberFormat.simpleCurrency(
@@ -79,7 +79,7 @@ class _DetailPageState extends State<DetailPage> {
                   icon: Icon(Icons.delete))
               : IconButton(
                   onPressed: () {
-                    print(wish);
+                    // print(wish);
                     print("not user");
                   },
                   icon: Icon(Icons.delete)),
@@ -122,7 +122,7 @@ class _DetailPageState extends State<DetailPage> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               liked++;
-                              print(liked);
+                              // print(liked);
                               setState(() {
                                 print("it runs");
 
@@ -146,7 +146,7 @@ class _DetailPageState extends State<DetailPage> {
                           )
                         : IconButton(
                             onPressed: () {
-                              print(liked);
+                              // print(liked);
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             },
@@ -259,7 +259,6 @@ class _DetailPageState extends State<DetailPage> {
             print("already on list");
           }
         },
-        // backgroundColor: Colors.green,
         child: Icon(wish ? Icons.check : Icons.shopping_cart),
       ),
     );

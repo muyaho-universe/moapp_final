@@ -20,7 +20,7 @@ import 'firebase/load_repo.dart';
 import 'model/product.dart';
 import 'login.dart';
 import 'model/product_repo.dart';
-import 'model/product_repo2.dart';
+
 import 'dart:async';
 
 class HomePage extends StatefulWidget {
@@ -63,8 +63,8 @@ class _HomePageState extends State<HomePage> {
         wish = ProductsRepository.doIWish[product.id]!;
         print("null");
       }
-      String t = product.name + " is " + wish.toString();
-      print(t);
+      // String t = product.name + " is " + wish.toString();
+      // print(t);
       return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -236,34 +236,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      // body: StreamBuilder(
-      //   stream: FirebaseFirestore.instance.collection('products').snapshots(),
-      //   builder: (context,
-      //       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return Center(
-      //         child: CircularProgressIndicator(), //로딩되는 동그라미 보여주기
-      //       );
-      //     }
-      //     if (snapshot.hasData) {
-      //       for (int i = 0; i < snapshot.data!.docs.length; i++) {
-      //         var one = snapshot.data!.docs[i];
-      //         var go = true;
-      //         for (var p in ProductsRepository.loadProducts) {
-      //           if (p.name == one.get('name')) {
-      //             go = false;
-      //           }
-      //         }
-      //         if (go) {
-      //           ProductsRepository.loadProducts.add(Product(
-      //             name: one.get('name'),
-      //             price: one.get('price'),
-      //             image: one.get('image'),
-      //             description: one.get('description'),
-      //           ));
-      //         }
-      //       }
-      //     }
 
       body: Consumer<FirebaseLoading>(
         builder: (context, appState, _) => Column(
@@ -322,11 +294,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Future<String> _getImageURL(String imageUrl) async {
-//   final ref = FirebaseStorage.instance.ref().child(imageUrl);
-//   var url = await ref.getDownloadURL();
-//   return url;
-// }
 class FirebaseLoading extends ChangeNotifier {
   FirebaseLoading() {
     init();
@@ -339,11 +306,6 @@ class FirebaseLoading extends ChangeNotifier {
       if (user != null) {
         loading();
       }
-      // } else {
-      //   _guestBookMessages = [];
-      //   _guestBookSubscription?.cancel();
-      //   _attendingSubscription?.cancel();
-      // }
       notifyListeners();
     });
   }

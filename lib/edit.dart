@@ -151,7 +151,6 @@ class _EditPageState extends State<EditPage> {
     int price = int.parse(_priceController.text);
     String image ="";
     var time = FieldValue.serverTimestamp();
-    // String image2 = await FirebaseStorage.instance.ref().child(image).getDownloadURL();
     if(isLoaded){
       image = await FirebaseStorage.instance.ref().child(pickedImageName).getDownloadURL();
     }
@@ -159,12 +158,11 @@ class _EditPageState extends State<EditPage> {
         .collection('products').doc(widget.product.id)
         .update(<String, dynamic>{
       'description': _descriptionController.text,
-      // 'timestamp': DateTime.now().toString(),
+
       'name': _productNameController.text,
       'image': isLoaded ? image : widget.product.image,
       'price': price,
-      // 'creator': FirebaseAuth.instance.currentUser!.uid,
-      // 'uploadTime' : DateTime.now(),
+
       'editedTime' : time, //FieldValue.serverTimestamp(),
     });
   }
