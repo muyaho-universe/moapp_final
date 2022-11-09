@@ -31,8 +31,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final wishProvider = Provider.of<WishProvider>(context);
     bool isLiked = ProductsRepository.doILike[widget.product.id]!;
-    var wish = false;
-    if(ProductsRepository.doIWish[widget.product.id]! != null){
+    bool? temp = ProductsRepository.doIWish[widget.product.id] ;
+    bool wish = false;
+    if(temp != null && temp == true){
       print("wish is null, let's chankge");
       wish = true;
     };

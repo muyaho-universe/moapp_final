@@ -329,8 +329,6 @@ class _HomePageState extends State<HomePage> {
 // }
 class FirebaseLoading extends ChangeNotifier {
   FirebaseLoading() {
-    WishProvider w = new WishProvider();
-    w.fetchWishItemsOrCreate();
     init();
   }
 
@@ -466,6 +464,9 @@ class FirebaseLoading extends ChangeNotifier {
       }
       notifyListeners();
     });
+
+    WishProvider w = new WishProvider();
+    w.fetchWishItemsOrCreate();
   }
 
   static prints() {

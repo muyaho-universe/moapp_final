@@ -16,6 +16,7 @@ class WishProvider with ChangeNotifier {
   }
 
   Future<void> fetchWishItemsOrCreate() async {
+    print("Fetch");
     wishReference.snapshots().listen((snapshots) {
       ProductsRepository.doIWish = {};
       for (var doc in snapshots.docs) {

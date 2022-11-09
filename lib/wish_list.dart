@@ -25,8 +25,8 @@ class _WishListPageState extends State<WishListPage> {
     }
 
     for (var p in products2) {
-      var wish = ProductsRepository.doIWish[p.id]!;
-      if (wish) products.add(p);
+      bool? wish = ProductsRepository.doIWish[p.id];
+      if (wish != null && wish == true) products.add(p);
     }
 
     return products.map((product) {
@@ -48,19 +48,20 @@ class _WishListPageState extends State<WishListPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Flexible(
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: product.name,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              child: Text(product.name),
+              // Flexible(
+              //   child: RichText(
+              //     maxLines: 2,
+              //     overflow: TextOverflow.ellipsis,
+              //     text: TextSpan(
+              //       children: <TextSpan>[
+              //         TextSpan(
+              //           text: product.name,
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ),
             SizedBox(
               width: 50,
