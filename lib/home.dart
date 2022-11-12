@@ -16,7 +16,7 @@ import 'package:shrine/wish_list.dart';
 
 import 'add.dart';
 import 'detail.dart';
-import 'firebase/load_repo.dart';
+
 import 'model/product.dart';
 import 'login.dart';
 import 'model/product_repo.dart';

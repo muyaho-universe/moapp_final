@@ -18,7 +18,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shrine/home.dart';
 import 'model/product_repo.dart';
-import 'firebase/load_repo.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

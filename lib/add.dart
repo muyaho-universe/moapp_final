@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shrine/home.dart';
 import 'package:get/get.dart';
 
-import 'firebase/load_repo.dart';
 import 'model/product_repo.dart';
 
 class AddPage extends StatefulWidget {
