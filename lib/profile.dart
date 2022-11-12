@@ -76,7 +76,7 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Text("anonymous uid"),
+                  Text(FirebaseAuth.instance.currentUser!.uid),
                   Divider(
                     height: 8,
                     thickness: 1,
